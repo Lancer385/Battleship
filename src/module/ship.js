@@ -6,6 +6,7 @@ export class Ship {
         this.name = name;
         this.length = length;
         this.hit = 0;
+        this.coordinates = [];
         this.axis = axis;
         this.id;
     }
