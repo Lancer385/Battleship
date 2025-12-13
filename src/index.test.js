@@ -70,9 +70,9 @@ describe("Game Board", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        board.placeShip("sub", 3, 0, 8, 0); // would go to columns 8, 9, 10 (out of bounds!)
+        board.placeShip("sub", 3, 0, 8, 0); // would go to columns 8, 9, 10 (out of bounds)
 
-        // ship should NOT be placed
+        // ship should not be placed
         expect(board.ships.length).toBe(0);
 
         // board stays empty

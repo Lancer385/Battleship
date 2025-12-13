@@ -31,7 +31,6 @@ export class Gameboard {
     ship.id = this.ships.length;
     for (let i = 0; i < ship.length; i++){
         ship.coordinates.push(ship.isHorizontal()? [x, y + i] : [x + i, y]);
-
       }
     return ship;
   }
