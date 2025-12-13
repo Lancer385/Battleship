@@ -5,6 +5,7 @@ export class Gameboard {
     this.board = [];
     this.size = 10;
     this.ships = [];
+
   }
 
   makeBoard() {
@@ -47,10 +48,21 @@ export class Gameboard {
     this.ships.push(ship);
   }
 
-  getHit(x, y){
-
+  receiveAttack(x, y){
+    if (this.board[x][y] === -1 /* (default number for misses) */  || this.board[x][y] === 69 /* nice! */ ){
+      return;
+    }
+    if (this.board[x][y] === 99){ 
+      this.board[x][y] = -1 
+    }
+    else {
+     this.ships[this.board[x][y]].hit += 1;
+     this.board[x][y] = 69;
+    }
   }
-
+  reportSunkenShips(){
+    return this.ships.every(sunk => sunk.isSunk());
+  }
   #checkNearestNeighbor(board, ship) {
     // edge cases: is there anything nearby?
     const directions = [
