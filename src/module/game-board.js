@@ -1,110 +1,104 @@
 import { Ship } from "./ship.js";
 
 export class Gameboard {
-    constructor(){
-        this.board = [];
-        this.size = 10;
-        this.ships = [];
-    }
+  constructor() {
+    this.board = [];
+    this.size = 10;
+    this.ships = [];
+  }
 
-    makeBoard(){
-        if (this.board.length === this.size){
-            return;
-        }
-        for (let i = 0; i < this.size; i++){
-            this.board.push([]);
-            for(let j = 0; j < this.size; j++){
-                this.board[i].push(99);
-            }
-        };
+  makeBoard() {
+    if (this.board.length === this.size) {
+      return;
     }
-
-    makeMockBoard(){
-        return this.board.map(row => [...row]);
+    for (let i = 0; i < this.size; i++) {
+      this.board.push([]);
+      for (let j = 0; j < this.size; j++) {
+        this.board[i].push(99);
+      }
     }
+  }
+  // used for validation, going to be useful later for the UI(if i actually end up implementing it 💀)
+  makeMockBoard() {
+    return this.board.map((row) => [...row]);
+  }
 
-    #checkNearestNeighbor(board, ship){
-        const directions = [
-                // Writing comments for this because it's confusing af
-                [-1, -1],  // top-left
-                [-1,  0],  // top
-                [-1,  1],  // top-right
-                [ 0, -1],  // left
-                [ 0,  1],  // right
-                [+1, -1],  // bottom-left
-                [+1,  0],  // bottom
-                [+1,  1]   // bottom-right
-            ];
-        let shipID = ship.id;
-        let coordinates = ship.coordinates
-        for (let i = 0; i < coordinates.length; i++){
-            for (let j = 0; j < directions.length; j++){
-                let checkX = coordinates[i][0] + directions[j][0];
-                let checkY = coordinates[i][1] + directions[j][1];
-                if (checkX < 0 || checkX >= 10 || checkY < 0 || checkY >= 10){
-                    continue;
-                }
-                if (board[checkX][checkY] !== 99 && board[checkX][checkY] !== shipID) {
-                    return false;
-                }
-                    
-            }
+  #checkNearestNeighbor(board, ship) {
+    // edge cases: is there anything nearby?
+    const directions = [
+      // Writing comments for this because it's confusing af
+      [-1, -1], // top-left
+      [-1, 0], // top
+      [-1, 1], // top-right
+      [0, -1], // left
+      [0, 1], // right
+      [+1, -1], // bottom-left
+      [+1, 0], // bottom
+      [+1, 1], // bottom-right
+    ];
+    // saved coordinates for where the ship is going to be placed
+    let coordinates = ship.coordinates;
+
+    // checking all 8 directions for each cell, are they empty? then place it
+    // (also excluding the same cell id to work well)
+    for (let i = 0; i < coordinates.length; i++) {
+      for (let j = 0; j < directions.length; j++) {
+        let checkX = coordinates[i][0] + directions[j][0];
+        let checkY = coordinates[i][1] + directions[j][1];
+        if (checkX < 0 || checkX >= 10 || checkY < 0 || checkY >= 10) {
+          continue;
         }
-        return true;
+        if (board[checkX][checkY] !== 99 && board[checkX][checkY] !== ship.id) {
+          return false;
+        }
+      }
     }
+    return true;
+  }
 
-    
-    #canPlaceH(ship, x, y){
-        let mockBoard = this.makeMockBoard();
-        if (y + ship.length > this.size) {
-            return false;
-        }
-        let temp = y;
-        for (let i = 0; i < ship.length; i++){
-            if (mockBoard[x][temp] !== 99){
-                return false;
-            }
-            mockBoard[x][temp] = this.ships.length;
-            temp++; 
-        };
-        let truthy = this.#checkNearestNeighbor(mockBoard, ship);
-        if (!this.#checkNearestNeighbor(mockBoard, ship)){
-            console.log(truthy)
-            return false
-        };
-        return true;
-    };
-
-    #canPlaceV(ship, x){
-
+  #canPlace(ship) {
+    const mockBoard = this.makeMockBoard();
+    let placement = ship.coordinates;
+    // 99 means empty cell, honestly i don't know what else to put so  ¯_(ツ)_/¯
+    for (let i = 0; i < placement.length; i++) {
+      if (mockBoard[placement[i][0]][placement[i][1]] !== 99) {
+        return false;
+      }
+      mockBoard[placement[i][0]][placement[i][1]] = this.ships.length;
     }
-    placeShip(name, length, x, y){
-        if (x < 0 || y < 0){
-            return;
-        }
-        const ship = new Ship(name, length, 0);
-        let temp1 = y;
-        for (let i = 0; i < ship.length; i++){
-            ship.coordinates.push([x, temp1]);
-            temp1++;
-        }
-        ship.id = this.ships.length;
-        if(!this.#canPlaceH(ship, x, y)){
-            return;
-        }
-        let temp = y;
-        for (let i = 0; i < ship.length; i++){
-            this.board[x][temp] = this.ships.length;
-            temp++;
-        }
-        this.ships.push(ship);
+    // check nearest neighbor
+    if (!this.#checkNearestNeighbor(mockBoard, ship)) {
+      return false;
     }
+    return true;
+  }
+
+  placeShip(name, length, x, y) {
+    if (x < 0 || y < 0) {
+      return;
+    }
+    const ship = new Ship(name, length, 0);
+    ship.id = this.ships.length;
+    for (let i = 0; i < ship.length; i++){
+        ship.coordinates.push(ship.isHorizontal? [x, y + i] : [x + i, y]);
+        console.log(ship.coordinates)
+    }
+    if (!this.#canPlace(ship,x,y)){
+        return;
+    }
+    for (let i = 0; i < ship.length; i++) {
+      this.board[ship.coordinates[i][0]][ship.coordinates[i][1]] = this.ships.length;
+    }
+    this.ships.push(ship);
+  }
 }
 
 const board = new Gameboard();
 
 board.makeBoard();
-board.placeShip("destroyer", 1 ,0, 3 );
-board.placeShip("destroyer", 1 ,1, 3 );
+
+board.placeShip("destroyer", 3,0,3)
+board.placeShip("destroyer", 5,0,3)
+
+board.placeShip("destroyer", 3,2,3)
 console.table(board.board)
-console.log(board.ships[0])
