@@ -47,6 +47,10 @@ export class Gameboard {
     this.ships.push(ship);
   }
 
+  getHit(x, y){
+
+  }
+
   #checkNearestNeighbor(board, ship) {
     // edge cases: is there anything nearby?
     const directions = [
