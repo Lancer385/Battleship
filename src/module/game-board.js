@@ -22,28 +22,29 @@ export class Gameboard {
   makeMockBoard() {
     return this.board.map((row) => [...row]);
   }
+
   createShip(name, length, x, y, axis){
     if (x < 0 || y < 0) {
       return;
     }
     const ship = new Ship(name, length, axis);
     ship.id = this.ships.length;
-        
     for (let i = 0; i < ship.length; i++){
-        ship.coordinates.push(ship.isHorizontal? [x, y + i] : [x + i, y]);
-        console.log(ship.coordinates)
-    }
-    return ship;
+        ship.coordinates.push(ship.isHorizontal()? [x, y + i] : [x + i, y]);
 
+      }
+    return ship;
   }
+
   placeShip(name, length, x, y, axis) {
   const ship = this.createShip(name, length, x, y, axis);
-    if (!this.#canPlace(ship)){
+    if (!ship || !this.#canPlace(ship)){
         return;
     }
     for (let i = 0; i < ship.length; i++) {
       this.board[ship.coordinates[i][0]][ship.coordinates[i][1]] = this.ships.length;
     }
+    console.table(this.board)
     this.ships.push(ship);
   }
 
@@ -83,6 +84,13 @@ export class Gameboard {
   #canPlace(ship) {
     const mockBoard = this.makeMockBoard();
     let placement = ship.coordinates;
+    // checks out of bounds
+    for (let coord of placement) {
+        if (coord[0] < 0 || coord[0] >= this.size || 
+            coord[1] < 0 || coord[1] >= this.size) {
+            return false;
+        }
+    }
     // 99 means empty cell, honestly i don't know what else to put so  ¯_(ツ)_/¯
     for (let i = 0; i < placement.length; i++) {
       if (mockBoard[placement[i][0]][placement[i][1]] !== 99) {
