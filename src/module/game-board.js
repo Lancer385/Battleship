@@ -22,6 +22,30 @@ export class Gameboard {
   makeMockBoard() {
     return this.board.map((row) => [...row]);
   }
+  createShip(name, length, x, y, axis){
+    if (x < 0 || y < 0) {
+      return;
+    }
+    const ship = new Ship(name, length, axis);
+    ship.id = this.ships.length;
+        
+    for (let i = 0; i < ship.length; i++){
+        ship.coordinates.push(ship.isHorizontal? [x, y + i] : [x + i, y]);
+        console.log(ship.coordinates)
+    }
+    return ship;
+
+  }
+  placeShip(name, length, x, y, axis) {
+  const ship = this.createShip(name, length, x, y, axis);
+    if (!this.#canPlace(ship)){
+        return;
+    }
+    for (let i = 0; i < ship.length; i++) {
+      this.board[ship.coordinates[i][0]][ship.coordinates[i][1]] = this.ships.length;
+    }
+    this.ships.push(ship);
+  }
 
   #checkNearestNeighbor(board, ship) {
     // edge cases: is there anything nearby?
@@ -72,33 +96,5 @@ export class Gameboard {
     }
     return true;
   }
-
-  placeShip(name, length, x, y) {
-    if (x < 0 || y < 0) {
-      return;
-    }
-    const ship = new Ship(name, length, 0);
-    ship.id = this.ships.length;
-    for (let i = 0; i < ship.length; i++){
-        ship.coordinates.push(ship.isHorizontal? [x, y + i] : [x + i, y]);
-        console.log(ship.coordinates)
-    }
-    if (!this.#canPlace(ship,x,y)){
-        return;
-    }
-    for (let i = 0; i < ship.length; i++) {
-      this.board[ship.coordinates[i][0]][ship.coordinates[i][1]] = this.ships.length;
-    }
-    this.ships.push(ship);
-  }
 }
 
-const board = new Gameboard();
-
-board.makeBoard();
-
-board.placeShip("destroyer", 3,0,3)
-board.placeShip("destroyer", 5,0,3)
-
-board.placeShip("destroyer", 3,2,3)
-console.table(board.board)
