@@ -25,4 +25,10 @@ export class Ship {
   gotHit() {
     this.hit += 1;
   }
+
+  setPosition(x , y){
+    for (let i = 0; i < this.length; i++){
+      this.coordinates.push(this.isHorizontal()? [x, y + i] : [x + i, y]);
+    }
+  }
 }
