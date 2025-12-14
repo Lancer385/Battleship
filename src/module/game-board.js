@@ -25,20 +25,19 @@ export class Gameboard {
       }
     }
   }
-  // used for validation, going to be useful later for the UI(if i actually end up implementing it 💀)
+  // used for validation
   makeMockBoard() {
     return this.board.map((row) => [...row]);
   }
 
 
-  placeShip(ship, x, y) { // ship here is this.ships[shipID]
+  placeShip(ship) { // ship here is this.ships[shipID]
     if (!ship) {
         return;
     }
     for (let i = 0; i < ship.length; i++) {
       this.board[ship.coordinates[i][0]][ship.coordinates[i][1]] = ship.id;
     }
-    console.table(this.board)
     this.placedShips.push(ship);
   }
 
@@ -104,17 +103,15 @@ export class Gameboard {
             return false;
         }
     }
-    // 99 means empty cell, honestly i don't know what else to put so  ¯_(ツ)_/¯
+    // 99 means empty cell
     for (let i = 0; i < placement.length; i++) {
       if (mockBoard[placement[i][0]][placement[i][1]] !== 99) {
-        ship.coordinates = [];
         return false;
       }
       mockBoard[placement[i][0]][placement[i][1]] = ship.id;
     }
     // check nearest neighbor
     if (!this.#checkNearestNeighbor(mockBoard, ship)) {
-      ship.coordinates = [];
       return false;
     }
     return true;
