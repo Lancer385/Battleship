@@ -98,3 +98,27 @@ describe("Game Board", () => {
         expect(board.placedShips.length).toBe(1);
     });
 });
+
+describe('Game Controller', () => {
+    test.only('should succeed in placing random ship for both players if prompted', () => {
+        global.console = {
+            ...console,
+        log: jest.fn((...args) => {
+                process.stdout.write(args.join(' ') + '\n');
+            }),
+        };
+        const game = new GameController();
+        game.makePlayers("lancer");
+        game.makePlayers("radish");
+        game.randomizePlacement();
+        game.switchTurn();
+        game.randomizePlacement();
+
+        // Check blue player has all 5 ships
+        expect(game.players.blue.board.placedShips.length).toBe(5);
+        
+        // Check red player has all 5 ships  
+        expect(game.players.red.board.placedShips.length).toBe(5);
+        
+    });
+});
