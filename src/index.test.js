@@ -30,11 +30,15 @@ describe("Game Board", () => {
 
         // place first ship (destroyer - length 2)
         const ship1 = board.ships[4]; // Destroyer
-        board.placeShip(ship1, 0, 3);
+        if (board.canPlace(ship1, 0, 3)) {
+            board.placeShip(ship1);
+        }
 
         // try placing another one illegally (diagonal neighbor)
         const ship2 = board.ships[3]; // Submarine
-        board.placeShip(ship2, 1, 3);
+        if (board.canPlace(ship2, 1, 3)) {
+            board.placeShip(ship2);
+        }
 
         // NO new ship should be added to placedShips
         expect(board.placedShips.length).toBe(1);
@@ -48,7 +52,9 @@ describe("Game Board", () => {
         board.makeBoard();
 
         const ship = board.ships[2]; // Cruiser - length 3
-        board.placeShip(ship, 0, 8); // would go to columns 8, 9, 10 (out of bounds)
+        if (board.canPlace(ship, 0, 8)) { // would go to columns 8, 9, 10 (out of bounds)
+            board.placeShip(ship);
+        }
 
         // ship should not be placed
         expect(board.placedShips.length).toBe(0);
@@ -65,7 +71,9 @@ describe("Game Board", () => {
 
         const ship = board.ships[2]; // Cruiser - length 3
         ship.changePosition(); // make it vertical
-        board.placeShip(ship, 8, 5);
+        if (board.canPlace(ship, 8, 5)) {
+            board.placeShip(ship);
+        }
 
         expect(board.placedShips.length).toBe(0);
         expect(board.board[8][5]).toBe(99);
@@ -77,13 +85,16 @@ describe("Game Board", () => {
 
         const ship1 = board.ships[4]; // Destroyer
         ship1.changePosition(); // vertical
-        board.placeShip(ship1, 3, 3);
-        
+        if (board.canPlace(ship1, 3, 3)) {
+            board.placeShip(ship1);
+        }
+
         const ship2 = board.ships[3]; // Submarine
         ship2.changePosition(); // vertical
-        board.placeShip(ship2, 2, 4);
+        if (board.canPlace(ship2, 2, 4)) {
+            board.placeShip(ship2);
+        }
 
         expect(board.placedShips.length).toBe(1);
     });
 });
-
