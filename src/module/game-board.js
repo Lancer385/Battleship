@@ -4,8 +4,8 @@ export class Gameboard {
   constructor() {
     this.board = [];
     this.size = 10;
-    this.ships = [];
-
+    this.createdShips = [];
+    this.placedShips = []
   }
 
   makeBoard() {
@@ -24,28 +24,25 @@ export class Gameboard {
     return this.board.map((row) => [...row]);
   }
 
-  createShip(name, length, x, y, axis){
-    if (x < 0 || y < 0) {
-      return;
-    }
+  createShip(name, length, axis){
     const ship = new Ship(name, length, axis);
-    ship.id = this.ships.length;
-    for (let i = 0; i < ship.length; i++){
-        ship.coordinates.push(ship.isHorizontal()? [x, y + i] : [x + i, y]);
-      }
-    return ship;
+    ship.id = this.createdShips.length;
+    this.createdShips.push(ship);
   }
 
-  placeShip(name, length, x, y, axis) {
-  const ship = this.createShip(name, length, x, y, axis);
+  placeShip(ship, x, y) { // ship here is this.createdShips[ship.id]
+    if (x < 0 || y < 0 || x > 10 || y > 10) {
+      return;
+    }
+    ship.setPosition(x, y);
     if (!ship || !this.#canPlace(ship)){
         return;
     }
     for (let i = 0; i < ship.length; i++) {
-      this.board[ship.coordinates[i][0]][ship.coordinates[i][1]] = this.ships.length;
+      this.board[ship.coordinates[i][0]][ship.coordinates[i][1]] = ship.id;
     }
     console.table(this.board)
-    this.ships.push(ship);
+    this.placedShips.push(ship);
   }
 
   receiveAttack(x, y){
@@ -111,7 +108,7 @@ export class Gameboard {
       if (mockBoard[placement[i][0]][placement[i][1]] !== 99) {
         return false;
       }
-      mockBoard[placement[i][0]][placement[i][1]] = this.ships.length;
+      mockBoard[placement[i][0]][placement[i][1]] = ship.id;
     }
     // check nearest neighbor
     if (!this.#checkNearestNeighbor(mockBoard, ship)) {
