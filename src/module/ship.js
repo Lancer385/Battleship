@@ -8,7 +8,7 @@ export class Ship {
     this.hit = 0;
     this.coordinates = [];
     this.axis = axis;
-    this.id;
+    this.id = 0;
   }
 
   isHorizontal() {
