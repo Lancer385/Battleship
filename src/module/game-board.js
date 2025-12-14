@@ -32,11 +32,7 @@ export class Gameboard {
 
 
   placeShip(ship, x, y) { // ship here is this.ships[shipID]
-    if (x < 0 || y < 0 || x > 10 || y > 10) {
-      return;
-    }
-    ship.setPosition(x, y);
-    if (!ship || !this.#canPlace(ship)){
+    if (!ship) {
         return;
     }
     for (let i = 0; i < ship.length; i++) {
@@ -94,7 +90,11 @@ export class Gameboard {
     return true;
   }
 
-  #canPlace(ship) {
+  canPlace(ship, x, y) {
+    if (x < 0 || y < 0 || x > 10 || y > 10) {
+      return false;
+    }
+    ship.setPosition(x, y);
     const mockBoard = this.makeMockBoard();
     let placement = ship.coordinates;
     // checks out of bounds
@@ -107,12 +107,14 @@ export class Gameboard {
     // 99 means empty cell, honestly i don't know what else to put so  ¯_(ツ)_/¯
     for (let i = 0; i < placement.length; i++) {
       if (mockBoard[placement[i][0]][placement[i][1]] !== 99) {
+        ship.coordinates = [];
         return false;
       }
       mockBoard[placement[i][0]][placement[i][1]] = ship.id;
     }
     // check nearest neighbor
     if (!this.#checkNearestNeighbor(mockBoard, ship)) {
+      ship.coordinates = [];
       return false;
     }
     return true;
