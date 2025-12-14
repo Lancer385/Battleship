@@ -4,7 +4,13 @@ export class Gameboard {
   constructor() {
     this.board = [];
     this.size = 10;
-    this.createdShips = [];
+    this.ships = [
+     new Ship("Carrier", 5, 0, 0),
+     new Ship("Battleship", 4, 1, 0), 
+     new Ship("Cruiser", 3, 2, 0),
+     new Ship("Submarine", 3, 3, 0),
+     new Ship("Destroyer", 2, 4, 0)
+    ]
     this.placedShips = []
   }
 
@@ -24,13 +30,8 @@ export class Gameboard {
     return this.board.map((row) => [...row]);
   }
 
-  createShip(name, length, axis){
-    const ship = new Ship(name, length, axis);
-    ship.id = this.createdShips.length;
-    this.createdShips.push(ship);
-  }
 
-  placeShip(ship, x, y) { // ship here is this.createdShips[ship.id]
+  placeShip(ship, x, y) { // ship here is this.ships[shipID]
     if (x < 0 || y < 0 || x > 10 || y > 10) {
       return;
     }
