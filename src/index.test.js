@@ -43,10 +43,12 @@ describe("Game Board", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        board.placeShip("destroyer", 1, 0, 3, 0); // 0 = horizontal
+        board.createShip("destroyer", 1, 0); // 0 = horizontal
+        const ship = board.createdShips[0];
+        board.placeShip(ship, 0, 3);
 
         expect(board.board[0][3]).toBe(0);
-        expect(board.ships.length).toBe(1);
+        expect(board.placedShips.length).toBe(1);
     });
 
     test("does NOT place a ship if position is invalid", () => {
@@ -54,13 +56,17 @@ describe("Game Board", () => {
         board.makeBoard();
 
         // place first ship
-        board.placeShip("destroyer", 1, 0, 3, 0);
+        board.createShip("destroyer", 1, 0);
+        const ship1 = board.createdShips[0];
+        board.placeShip(ship1, 0, 3);
 
         // try placing another one illegally (diagonal neighbor)
-        board.placeShip("destroyer", 1, 1, 3, 0);
+        board.createShip("destroyer", 1, 0);
+        const ship2 = board.createdShips[1];
+        board.placeShip(ship2, 1, 3);
 
         // NO new ship should be added
-        expect(board.ships.length).toBe(1);
+        expect(board.placedShips.length).toBe(1);
 
         // board must remain unchanged at that spot
         expect(board.board[1][3]).toBe(99);
@@ -70,10 +76,12 @@ describe("Game Board", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        board.placeShip("sub", 3, 0, 8, 0); // would go to columns 8, 9, 10 (out of bounds)
+        board.createShip("sub", 3, 0);
+        const ship = board.createdShips[0];
+        board.placeShip(ship, 0, 8); // would go to columns 8, 9, 10 (out of bounds)
 
         // ship should not be placed
-        expect(board.ships.length).toBe(0);
+        expect(board.placedShips.length).toBe(0);
 
         // board stays empty
         for (const row of board.board) {
@@ -85,7 +93,9 @@ describe("Game Board", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        board.placeShip("cruiser", 3, 2, 4, 0); // horizontal at (2,4)
+        board.createShip("cruiser", 3, 0);
+        const ship = board.createdShips[0];
+        board.placeShip(ship, 2, 4); // horizontal at (2,4)
 
         expect(board.board[2][4]).toBe(0);
         expect(board.board[2][5]).toBe(0);
@@ -96,18 +106,19 @@ describe("Game Board", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        // Ship 0
-        board.placeShip("destroyer", 2, 0, 0, 0);
-        // Ship 1 (far away)
-        board.placeShip("submarine", 3, 2, 5, 0);
+        board.createShip("destroyer", 2, 0);
+        const ship1 = board.createdShips[0];
+        board.placeShip(ship1, 0, 0);
 
-        expect(board.ships.length).toBe(2);
+        board.createShip("submarine", 3, 0);
+        const ship2 = board.createdShips[1];
+        board.placeShip(ship2, 2, 5);
 
-        // Check ship 0 cells
+        expect(board.placedShips.length).toBe(2);
+
         expect(board.board[0][0]).toBe(0);
         expect(board.board[0][1]).toBe(0);
 
-        // Check ship 1 cells
         expect(board.board[2][5]).toBe(1);
         expect(board.board[2][6]).toBe(1);
         expect(board.board[2][7]).toBe(1);
@@ -117,44 +128,43 @@ describe("Game Board", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        // Place first ship
-        board.placeShip("destroyer", 2, 0, 0, 0);
+        board.createShip("destroyer", 2, 0);
+        const ship1 = board.createdShips[0];
+        board.placeShip(ship1, 0, 0);
 
-        // Attempt to illegally overlap second ship
-        board.placeShip("patrol", 2, 0, 1, 0);
+        board.createShip("patrol", 2, 0);
+        const ship2 = board.createdShips[1];
+        board.placeShip(ship2, 0, 1);
 
-        // Should still be only 1 ship
-        expect(board.ships.length).toBe(1);
+        expect(board.placedShips.length).toBe(1);
 
-        // Board must still reflect ship 0 only
         expect(board.board[0][0]).toBe(0);
         expect(board.board[0][1]).toBe(0);
     });
-
-    // Vertical tests
 
     test("places a vertical ship correctly", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        board.placeShip("destroyer", 3, 2, 4, 1); // 1 = vertical
+        board.createShip("destroyer", 3, 1);
+        const ship = board.createdShips[0];
+        board.placeShip(ship, 2, 4);
         
-        // Check if ship occupies the right vertical cells
         expect(board.board[2][4]).toBe(0);
         expect(board.board[3][4]).toBe(0);
         expect(board.board[4][4]).toBe(0);
-        expect(board.ships.length).toBe(1);
+        expect(board.placedShips.length).toBe(1);
     });
 
     test("vertical ship goes out of bounds and gets rejected", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        // Try placing a 3-length vertical ship at row 8
-        // It would need rows 8, 9, 10 but 10 doesn't exist
-        board.placeShip("cruiser", 3, 8, 5, 1);
-        console.table(board.board)
-        expect(board.ships.length).toBe(0);
+        board.createShip("cruiser", 3, 1);
+        const ship = board.createdShips[0];
+        board.placeShip(ship, 8, 5);
+
+        expect(board.placedShips.length).toBe(0);
         expect(board.board[8][5]).toBe(99);
     });
 
@@ -162,19 +172,19 @@ describe("Game Board", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        // Horizontal ship
-        board.placeShip("destroyer", 2, 0, 0, 0);
+        board.createShip("destroyer", 2, 0);
+        const ship1 = board.createdShips[0];
+        board.placeShip(ship1, 0, 0);
         
-        // Vertical ship far away
-        board.placeShip("submarine", 3, 5, 7, 1);
+        board.createShip("submarine", 3, 1);
+        const ship2 = board.createdShips[1];
+        board.placeShip(ship2, 5, 7);
 
-        expect(board.ships.length).toBe(2);
+        expect(board.placedShips.length).toBe(2);
         
-        // Horizontal check
         expect(board.board[0][0]).toBe(0);
         expect(board.board[0][1]).toBe(0);
         
-        // Vertical check
         expect(board.board[5][7]).toBe(1);
         expect(board.board[6][7]).toBe(1);
         expect(board.board[7][7]).toBe(1);
@@ -184,23 +194,26 @@ describe("Game Board", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        // Place first vertical ship at (3,3) going down
-        board.placeShip("destroyer", 2, 3, 3, 1);
+        board.createShip("destroyer", 2, 1);
+        const ship1 = board.createdShips[0];
+        board.placeShip(ship1, 3, 3);
         
-        // Try placing another vertical ship diagonally adjacent at (2,4)
-        board.placeShip("patrol", 2, 2, 4, 1);
+        board.createShip("patrol", 2, 1);
+        const ship2 = board.createdShips[1];
+        board.placeShip(ship2, 2, 4);
 
-        // Should reject the second ship!
-        expect(board.ships.length).toBe(1);
+        expect(board.placedShips.length).toBe(1);
     });
 
     test("vertical ship at column 0 works fine", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        board.placeShip("battleship", 4, 2, 0, 1); // vertical at leftmost column
+        board.createShip("battleship", 4, 1);
+        const ship = board.createdShips[0];
+        board.placeShip(ship, 2, 0);
 
-        expect(board.ships.length).toBe(1);
+        expect(board.placedShips.length).toBe(1);
         expect(board.board[2][0]).toBe(0);
         expect(board.board[3][0]).toBe(0);
         expect(board.board[4][0]).toBe(0);
@@ -211,15 +224,18 @@ describe("Game Board", () => {
         const board = new Gameboard();
         board.makeBoard();
 
-        // Horizontal at top
-        board.placeShip("carrier", 5, 0, 0, 0);
+        board.createShip("carrier", 5, 0);
+        const ship1 = board.createdShips[0];
+        board.placeShip(ship1, 0, 0);
         
-        // Vertical in middle (with gap)
-        board.placeShip("battleship", 4, 3, 3, 1);
+        board.createShip("battleship", 4, 1);
+        const ship2 = board.createdShips[1];
+        board.placeShip(ship2, 3, 3);
         
-        // Another horizontal at bottom (with gap)
-        board.placeShip("cruiser", 3, 9, 6, 0);
+        board.createShip("cruiser", 3, 0);
+        const ship3 = board.createdShips[2];
+        board.placeShip(ship3, 9, 6);
 
-        expect(board.ships.length).toBe(3);
+        expect(board.placedShips.length).toBe(3);
     });
 });
