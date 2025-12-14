@@ -2,13 +2,13 @@ const horizontal = 0;
 const vertical = 1;
 
 export class Ship {
-  constructor(name, length, axis) {
+  constructor(name, length, id, axis) {
     this.name = name;
     this.length = length;
     this.hit = 0;
     this.coordinates = [];
     this.axis = axis;
-    this.id = 0;
+    this.id = id;
   }
 
   isHorizontal() {
