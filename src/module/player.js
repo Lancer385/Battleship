@@ -18,7 +18,7 @@ export class Player {
             return false;
         }
         if(this.board.canPlace(this.pickedShip, x, y)){
-            this.board.placeShip(this.pickedShip)
+            this.board.placeShip(this.pickedShip);
             this.pickedShip = null;
             return true;
         }
@@ -40,9 +40,11 @@ export class Player {
             }
         }
     }
+
     #randomizer0_9(){
         return Math.floor(Math.random() * 10);
     }
+
     #isPlaced(ship){
         return this.board.placedShips.some(id => id.id === ship.id);
     }

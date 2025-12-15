@@ -10,13 +10,14 @@ export class Gameboard {
      new Ship("Cruiser", 3, 2, 0),
      new Ship("Submarine", 3, 3, 0),
      new Ship("Destroyer", 2, 4, 0)
-    ]
-    this.placedShips = []
+    ];
+    this.placedShips = [];
   }
   
   resetBoard() {
     this.board.length = 0;
   }
+
   makeBoard() {
     if (this.board.length === this.size) {
       return;
@@ -28,6 +29,7 @@ export class Gameboard {
       }
     }
   }
+
   // used for validation
   makeMockBoard() {
     return this.board.map((row) => [...row]);
@@ -49,7 +51,7 @@ export class Gameboard {
       return false; // can't hit this, try again
     }
     if (this.board[x][y] === 99){ 
-      this.board[x][y] = -1 
+      this.board[x][y] = -1; 
     }
     else {
      this.ships[this.board[x][y]].hit += 1;
@@ -57,9 +59,11 @@ export class Gameboard {
     }
     return true; // Goodjob hitting or... missing. it's your opponent's turn
   }
+
   reportSunkenShips(){
     return this.ships.every(sunk => sunk.isSunk());
   }
+
   #checkNearestNeighbor(board, ship) {
     // edge cases: is there anything nearby?
     const directions = [
