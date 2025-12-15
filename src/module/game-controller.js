@@ -6,7 +6,7 @@ export class GameController {
         this.players = {
             blue : null,
             red : null
-        }
+        };
         this.activePlayer = null;
     }
 
@@ -22,6 +22,7 @@ export class GameController {
 
         }
     }
+
     switchTurn(){
         this.activePlayer = this.activePlayer === this.players.blue ? this.players.red : this.players.blue;
     }
@@ -31,17 +32,19 @@ export class GameController {
     }
 
     randomizer(){
-        this.activePlayer.randomizePlacement()
+        this.activePlayer.randomizePlacement();
     }
 
     pickShipPrompt(shipID){
         this.activePlayer.pickShip(shipID);
     }
+
     placeShipPrompt(x, y){
-        return this.activePlayer.placePlayerShip(x, y)
+        return this.activePlayer.placePlayerShip(x, y);
     }
+
     attack(x, y){
-        return this.getOpponent().board.receiveAttack(x, y)
+        return this.getOpponent().board.receiveAttack(x, y);
     }
 
     checkGameState(){

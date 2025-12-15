@@ -18,6 +18,7 @@ export class Ship {
   changePosition() {
     this.axis = this.axis === horizontal ? vertical : horizontal;
   }
+
   isSunk() {
     return this.length <= this.hit;
   }
@@ -27,7 +28,7 @@ export class Ship {
   }
 
   setPosition(x , y){
-    this.coordinates = []
+    this.coordinates = [];
     for (let i = 0; i < this.length; i++){
       this.coordinates.push(this.isHorizontal()? [x, y + i] : [x + i, y]);
     }

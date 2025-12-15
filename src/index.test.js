@@ -99,8 +99,8 @@ describe("Game Board", () => {
     });
 });
 
-describe('Game Controller', () => {
- test('two complete games should be played successfully with reset in between', () => {
+describe("Game Controller", () => {
+ test("two complete games should be played successfully with reset in between", () => {
     const game = new GameController();
 
     game.makePlayers("lancer", "blue");
