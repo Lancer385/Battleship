@@ -13,7 +13,10 @@ export class Gameboard {
     ]
     this.placedShips = []
   }
-
+  
+  resetBoard() {
+    this.board.length = 0;
+  }
   makeBoard() {
     if (this.board.length === this.size) {
       return;
