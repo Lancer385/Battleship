@@ -22,11 +22,9 @@ export class GameController {
     switchTurn(){
         this.activePlayer = this.activePlayer === this.players.blue ? this.players.red : this.players.blue;
     }
-    #isPlaced(ship){
-        return this.activePlayer.board.placedShips.some(id => id.id === ship.id);
-    }
-    #randomizer0_9(){
-        return Math.floor(Math.random() * 10);
+
+    getOpponent(){
+        return this.activePlayer === this.players.red ? this.players.blue: this.players.red;
     }
 
     randomizePlacement(){
@@ -44,6 +42,27 @@ export class GameController {
                 }
             }
         }
+        console.table(playerBoard.board)
+    }
+
+    attack(x, y){
+        return this.getOpponent().board.receiveAttack(x, y)
+    }
+
+    checkGameState(){
+        for (let player of Object.values(this.players)){
+            if (player.board.reportSunkenShips()){
+                return true;
+            }
+        }
+        return false;
+    }
+    #isPlaced(ship){
+        return this.activePlayer.board.placedShips.some(id => id.id === ship.id);
+    }
+
+    #randomizer0_9(){
+        return Math.floor(Math.random() * 10);
     }
 }
 
