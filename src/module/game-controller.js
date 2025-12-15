@@ -1,3 +1,4 @@
+import { Gameboard } from "./game-board.js";
 import { Player } from "./player.js";
 
 export class GameController {
@@ -12,10 +13,12 @@ export class GameController {
     makePlayers(name, identity){
         if (this.players.blue === null) {
             this.players.blue = new Player(name, identity);
+            this.players.blue.board.makeBoard();
             this.activePlayer = this.players.blue;
         } 
         else {
             this.players.red = new Player(name, identity);
+            this.players.red.board.makeBoard();
 
         }
     }
@@ -27,24 +30,16 @@ export class GameController {
         return this.activePlayer === this.players.red ? this.players.blue: this.players.red;
     }
 
-    randomizePlacement(){
-        let playerBoard = this.activePlayer.board;
-        playerBoard.makeBoard()
-        let ships = this.activePlayer.board.ships;
-        
-        for (let ship of ships) {
-            if (Math.random() < 0.5) {
-                ship.changePosition();
-            }
-            while (!this.#isPlaced(ship)){
-                if (playerBoard.canPlace(ship, this.#randomizer0_9(), this.#randomizer0_9())){
-                    playerBoard.placeShip(ship);
-                }
-            }
-        }
-        console.table(playerBoard.board)
+    randomizer(){
+        this.activePlayer.randomizePlacement()
     }
 
+    pickShipPrompt(shipID){
+        this.activePlayer.pickShip(shipID);
+    }
+    placeShipPrompt(x, y){
+        return this.activePlayer.placePlayerShip(x, y)
+    }
     attack(x, y){
         return this.getOpponent().board.receiveAttack(x, y)
     }
@@ -52,17 +47,21 @@ export class GameController {
     checkGameState(){
         for (let player of Object.values(this.players)){
             if (player.board.reportSunkenShips()){
-                return true;
+
+                return {
+                    isGameOver: true,
+                    whoLost: player,
+                };
             }
         }
-        return false;
-    }
-    #isPlaced(ship){
-        return this.activePlayer.board.placedShips.some(id => id.id === ship.id);
+        return {isGameOver: false};
     }
 
-    #randomizer0_9(){
-        return Math.floor(Math.random() * 10);
+    resetTheGame(){
+        for (let player of Object.values(this.players)){
+            player.board = new Gameboard();
+            player.board.makeBoard();
+        }
     }
 }
 

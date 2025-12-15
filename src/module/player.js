@@ -5,5 +5,54 @@ export class Player {
         this.name = name;
         this.identity = identity;
         this.board = new Gameboard();
+        this.pickedShip = null;
+    }
+
+    pickShip(shipID){
+        this.pickedShip = this.board.ships[shipID]; 
+        return this.pickedShip;
+    }
+
+    placePlayerShip(x, y){
+        if (!this.pickedShip || this.#isPlaced(this.pickedShip)) {
+            return false;
+        }
+        if(this.board.canPlace(this.pickedShip, x, y)){
+            this.board.placeShip(this.pickedShip)
+            this.pickedShip = null;
+            return true;
+        }
+        return false;
+    }
+
+    randomizePlacement(){
+        if (this.board.placedShips.length !== 0) {
+            this.resetBoardState();
+        };
+        for (let ship of this.board.ships) {
+            if (Math.random() < 0.5) {
+                ship.changePosition();
+            }
+            while (!this.#isPlaced(ship)){
+                if (this.board.canPlace(ship, this.#randomizer0_9(), this.#randomizer0_9())){
+                    this.board.placeShip(ship);
+                }
+            }
+        }
+    }
+    #randomizer0_9(){
+        return Math.floor(Math.random() * 10);
+    }
+    #isPlaced(ship){
+        return this.board.placedShips.some(id => id.id === ship.id);
+    }
+
+    resetBoardState(){
+        for (let ship of this.board.placedShips){
+            ship.coordinates.length = 0;
+        }
+        this.board.placedShips.length = 0;
+        this.board.resetBoard();
+        this.board.createBoard();
     }
 }
