@@ -43,7 +43,7 @@ export class Gameboard {
 
   receiveAttack(x, y){
     if (this.board[x][y] === -1 /* (default number for misses) */  || this.board[x][y] === 69 /* nice! */ ){
-      return;
+      return false; // can't hit this, try again
     }
     if (this.board[x][y] === 99){ 
       this.board[x][y] = -1 
@@ -52,6 +52,7 @@ export class Gameboard {
      this.ships[this.board[x][y]].hit += 1;
      this.board[x][y] = 69;
     }
+    return true; // Goodjob hitting or... missing. it's your opponent's turn
   }
   reportSunkenShips(){
     return this.ships.every(sunk => sunk.isSunk());
