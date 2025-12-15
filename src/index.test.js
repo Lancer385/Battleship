@@ -100,25 +100,103 @@ describe("Game Board", () => {
 });
 
 describe('Game Controller', () => {
-    test.only('should succeed in placing random ship for both players if prompted', () => {
-        global.console = {
-            ...console,
-        log: jest.fn((...args) => {
-                process.stdout.write(args.join(' ') + '\n');
-            }),
-        };
-        const game = new GameController();
-        game.makePlayers("lancer");
-        game.makePlayers("radish");
-        game.randomizePlacement();
-        game.switchTurn();
-        game.randomizePlacement();
+ test('two complete games should be played successfully with reset in between', () => {
+    const game = new GameController();
 
-        // Check blue player has all 5 ships
-        expect(game.players.blue.board.placedShips.length).toBe(5);
-        
-        // Check red player has all 5 ships  
-        expect(game.players.red.board.placedShips.length).toBe(5);
-        
-    });
+    game.makePlayers("lancer", "blue");
+    game.makePlayers("radish", "red");
+    
+    // first game
+    game.randomizer();
+
+    console.table(game.players.blue.board.board);
+    
+    game.switchTurn();
+    game.randomizer();
+    console.table(game.players.red.board.board);
+    
+    game.switchTurn();
+    
+    expect(game.players.blue.board.placedShips.length).toBe(5);
+    expect(game.players.red.board.placedShips.length).toBe(5);
+    
+    // lancer wins
+
+    const radishShips = game.players.red.board.placedShips;
+    
+    // Test a miss first
+    const missResult = game.attack(9, 9); // could be empty could be not
+    expect(missResult).toBe(true);
+    if (game.players.red.board.board[9][9] === -1) {
+        expect(game.players.red.board.board[9][9]).toBe(-1);
+    } else {
+        expect(game.players.red.board.board[9][9]).toBe(69);
+    }
+    
+    game.switchTurn();
+    game.attack(0, 0);
+    game.switchTurn();
+    
+    // sinking all radish's ships because we like it fair
+    for (let ship of radishShips) {
+        for (let coord of ship.coordinates) {
+            const hitResult = game.attack(coord[0], coord[1]);
+            expect(hitResult).toBe(true);
+            expect(game.players.red.board.board[coord[0]][coord[1]]).toBe(69); // Hit!
+            
+            game.switchTurn();
+            game.attack(0, 0);
+            game.switchTurn();
+        }
+    }
+    
+    console.table(game.players.red.board.board);
+    
+    const game1Result = game.checkGameState();
+    expect(game1Result.isGameOver).toBe(true);
+    expect(game1Result.whoLost.name).toBe("radish");
+    
+    // resetting
+    game.resetTheGame();
+    expect(game.players.blue.board.placedShips.length).toBe(0);
+    expect(game.players.red.board.placedShips.length).toBe(0);
+    
+    // second game
+    game.activePlayer = game.players.blue;
+    game.randomizer();
+    console.table(game.players.blue.board.board);
+    
+    game.switchTurn();
+    game.randomizer();
+    console.table(game.players.red.board.board);
+    
+    game.switchTurn();
+    
+    expect(game.players.blue.board.placedShips.length).toBe(5);
+    expect(game.players.red.board.placedShips.length).toBe(5);
+    
+    // radish wins
+
+    const lancerShips = game.players.blue.board.placedShips;
+    game.switchTurn();
+    
+    for (let ship of lancerShips) {
+        for (let coord of ship.coordinates) {
+            const hitResult = game.attack(coord[0], coord[1]);
+            expect(hitResult).toBe(true);
+            expect(game.players.blue.board.board[coord[0]][coord[1]]).toBe(69);
+            
+            game.switchTurn();
+            game.attack(0, 0);
+            game.switchTurn();
+        }
+    }
+    
+    console.table(game.players.blue.board.board);
+    
+    const game2Result = game.checkGameState();
+    expect(game2Result.isGameOver).toBe(true);
+    expect(game2Result.whoLost.name).toBe("lancer");
+   
+});
 });
