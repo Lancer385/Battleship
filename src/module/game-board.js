@@ -29,7 +29,9 @@ export class Gameboard {
       }
     }
   }
-
+  getBoard(){
+    return this.board;
+  }
   // used for validation
   makeMockBoard() {
     return this.board.map((row) => [...row]);

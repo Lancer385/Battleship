@@ -9,7 +9,9 @@ export class GameController {
         };
         this.activePlayer = null;
     }
-
+    getPlayerBoard(){
+        return this.activePlayer.board.getBoard();
+    }
     makePlayers(name, identity){
         if (this.players.blue === null) {
             this.players.blue = new Player(name, identity);
