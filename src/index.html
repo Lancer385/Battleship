@@ -3,18 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" href="./UI/style.css">
     <title>Battleship</title>
   </head>
   <body>
-    <header class="controls">
-      <div class="blue-controls"></div>
-      <div class="game-title"></div>
-      <div class="red-controls"></div>
-    </header>
-    <div class="sea">
-      <div class="blue-sea"></div>
-      <div class="red-sea"></div>
+      <form id="make-player">
+        <div id = "names">
+          <div id="blue-name">
+            <input type="text" name="blue" placeholder="Name your admiral" required>
+          </div>
+          <div id="red-name">
+            <input type="text" name="red"placeholder="Name your marshal" required>
+          </div>
+        </div>
+        <button type="submit" >BEGIN THE GAME</button>
+      </form>
+    <div class="container">
+      <header class="game controls">
+        <div class="game blue-controls">BLUE</div>
+        <div class="game game-title">BATTLESHIP</div>
+        <div class="game red-controls">RED</div>
+      </header>
+      <div class="game sea">
+        <div class="game blue-sea">blue sea</div>
+        <div class="separator"></div>
+        <div class="game red-sea">red sea</div>
+      </div>
+      <footer class="game my-github">GitHUB</footer>
     </div>
-    <footer class="my-github"></footer>
   </body>
 </html>
