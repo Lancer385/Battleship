@@ -9,18 +9,23 @@ export class GameController {
         };
         this.activePlayer = null;
     }
+
     getPlayerBoard(){
-        return this.activePlayer.board.getBoard();
+        return { 
+            blue: this.players.blue.getBoard(), 
+            red: this.players.red.getBoard()
+        };
     }
+
     makePlayers(name, identity){
         if (this.players.blue === null) {
             this.players.blue = new Player(name, identity);
-            this.players.blue.board.makeBoard();
+            this.players.blue.makeBoard();
             this.activePlayer = this.players.blue;
         } 
         else {
             this.players.red = new Player(name, identity);
-            this.players.red.board.makeBoard();
+            this.players.red.makeBoard();
 
         }
     }
@@ -46,12 +51,12 @@ export class GameController {
     }
 
     attack(x, y){
-        return this.getOpponent().board.receiveAttack(x, y);
+        return this.getOpponent().receiveAttack(x, y);
     }
 
     checkGameState(){
         for (let player of Object.values(this.players)){
-            if (player.board.reportSunkenShips()){
+            if (player.reportSunkenShips()){
 
                 return {
                     isGameOver: true,
@@ -65,7 +70,7 @@ export class GameController {
     resetTheGame(){
         for (let player of Object.values(this.players)){
             player.board = new Gameboard();
-            player.board.makeBoard();
+            player.makeBoard();
         }
     }
 }

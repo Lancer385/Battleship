@@ -26,7 +26,10 @@ export class Ship {
   gotHit() {
     this.hit += 1;
   }
-
+  
+  getHitState(){
+    return this.hit;
+  }
   setPosition(x , y){
     this.coordinates = [];
     for (let i = 0; i < this.length; i++){
