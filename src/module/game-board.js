@@ -62,6 +62,14 @@ export class Gameboard {
     return true; // Goodjob hitting or... missing. it's your opponent's turn
   }
 
+  getHitState(ship){
+    return this.ships[ship].getHitState();
+  }
+
+  isSunk(ship){
+    return this.ships[ship].isSunk()
+  }
+  
   reportSunkenShips(){
     return this.ships.every(sunk => sunk.isSunk());
   }

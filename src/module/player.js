@@ -7,12 +7,28 @@ export class Player {
         this.board = new Gameboard();
         this.pickedShip = null;
     }
+    makeBoard(){
+        this.board.makeBoard();
+    }
+    resetBoard(){
+        this.board.resetBoard();
+    }
+    getBoard(){
+        return this.board.getBoard();
+    }
 
     pickShip(shipID){
         this.pickedShip = this.board.ships[shipID]; 
         return this.pickedShip;
     }
 
+    getHitState(ship){
+        return this.board.getHitState(ship);
+    }
+
+    isSunk(ship){
+        return this.board.isSunk(ship);
+    }
     placePlayerShip(x, y){
         if (!this.pickedShip || this.#isPlaced(this.pickedShip)) {
             return false;
@@ -24,7 +40,13 @@ export class Player {
         }
         return false;
     }
-
+    reportSunkenShips() {
+        return this.board.reportSunkenShips();
+    }
+    
+    receiveAttack(x, y) {
+        return this.board.receiveAttack(x, y);
+    }
     randomizePlacement(){
         if (this.board.placedShips.length !== 0) {
             this.resetBoardState();
@@ -57,4 +79,5 @@ export class Player {
         this.board.resetBoard();
         this.board.createBoard();
     }
+
 }
