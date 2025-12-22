@@ -100,103 +100,148 @@ describe("Game Board", () => {
 });
 
 describe("Game Controller", () => {
- test("two complete games should be played successfully with reset in between", () => {
-    const game = new GameController();
+    test("two complete games should be played successfully with reset in between", () => {
+        const game = new GameController();
 
-    game.makePlayers("lancer", "blue");
-    game.makePlayers("radish", "red");
-    
-    // first game
-    game.randomizer();
-
-    console.table(game.players.blue.board.board);
-    
-    game.switchTurn();
-    game.randomizer();
-    console.table(game.players.red.board.board);
-    
-    game.switchTurn();
-    
-    expect(game.players.blue.board.placedShips.length).toBe(5);
-    expect(game.players.red.board.placedShips.length).toBe(5);
-    
-    // lancer wins
-
-    const radishShips = game.players.red.board.placedShips;
-    
-    // Test a miss first
-    const missResult = game.attack(9, 9); // could be empty could be not
-    expect(missResult).toBe(true);
-    if (game.players.red.board.board[9][9] === -1) {
-        expect(game.players.red.board.board[9][9]).toBe(-1);
-    } else {
-        expect(game.players.red.board.board[9][9]).toBe(69);
-    }
-    
-    game.switchTurn();
-    game.attack(0, 0);
-    game.switchTurn();
-    
-    // sinking all radish's ships because we like it fair
-    for (let ship of radishShips) {
-        for (let coord of ship.coordinates) {
-            const hitResult = game.attack(coord[0], coord[1]);
-            expect(hitResult).toBe(true);
-            expect(game.players.red.board.board[coord[0]][coord[1]]).toBe(69); // Hit!
-            
-            game.switchTurn();
-            game.attack(0, 0);
-            game.switchTurn();
+        game.makePlayers("lancer", "blue");
+        game.makePlayers("radish", "red");
+        
+        // first game
+        
+        // place ships
+        game.randomizer(); // Blue (lancer) places ships
+        console.table(game.players.blue.board.board);
+        
+        game.switchTurn();
+        game.randomizer(); // Red (radish) places ships
+        console.table(game.players.red.board.board);
+        
+        game.switchTurn(); // back to blue
+        
+        // verify ships placed
+        expect(game.players.blue.board.placedShips.length).toBe(5);
+        expect(game.players.red.board.placedShips.length).toBe(5);
+        
+        // lancer sinks radish's ships
+        const radishShips = game.players.red.board.placedShips;
+        
+        for (let ship of radishShips) {
+            for (let coord of ship.coordinates) {
+                // lancer attacks
+                const hitResult = game.attack(coord[0], coord[1]);
+                expect(hitResult).toBe(true);
+                expect(game.players.red.board.board[coord[0]][coord[1]]).toBe(69); // Hit!
+                
+                // radish's turn
+                game.switchTurn();
+                game.attack(0, 0);
+                game.switchTurn(); // back to lancer
+            }
         }
-    }
-    
-    console.table(game.players.red.board.board);
-    
-    const game1Result = game.checkGameState();
-    expect(game1Result.isGameOver).toBe(true);
-    expect(game1Result.whoLost.name).toBe("radish");
-    
-    // resetting
-    game.resetTheGame();
-    expect(game.players.blue.board.placedShips.length).toBe(0);
-    expect(game.players.red.board.placedShips.length).toBe(0);
-    
-    // second game
-    game.activePlayer = game.players.blue;
-    game.randomizer();
-    console.table(game.players.blue.board.board);
-    
-    game.switchTurn();
-    game.randomizer();
-    console.table(game.players.red.board.board);
-    
-    game.switchTurn();
-    
-    expect(game.players.blue.board.placedShips.length).toBe(5);
-    expect(game.players.red.board.placedShips.length).toBe(5);
-    
-    // radish wins
-
-    const lancerShips = game.players.blue.board.placedShips;
-    game.switchTurn();
-    
-    for (let ship of lancerShips) {
-        for (let coord of ship.coordinates) {
-            const hitResult = game.attack(coord[0], coord[1]);
-            expect(hitResult).toBe(true);
-            expect(game.players.blue.board.board[coord[0]][coord[1]]).toBe(69);
-            
-            game.switchTurn();
-            game.attack(0, 0);
-            game.switchTurn();
+        
+        console.table(game.players.red.board.board);
+        
+        // check game 1 result
+        const game1Result = game.checkGameState();
+        expect(game1Result.isGameOver).toBe(true);
+        expect(game1Result.whoLost.name).toBe("radish");
+        
+        // resetting
+        game.resetTheGame();
+        expect(game.players.blue.board.placedShips.length).toBe(0);
+        expect(game.players.red.board.placedShips.length).toBe(0);
+        
+        // second game
+        game.activePlayer = game.players.blue;
+        game.randomizer();
+        console.table(game.players.blue.board.board);
+        
+        game.switchTurn();
+        game.randomizer();
+        console.table(game.players.red.board.board);
+        
+        // verify ships placed
+        expect(game.players.blue.board.placedShips.length).toBe(5);
+        expect(game.players.red.board.placedShips.length).toBe(5);
+        
+        // radish sinks lancer's ships
+        const lancerShips = game.players.blue.board.placedShips;
+        
+        for (let ship of lancerShips) {
+            for (let coord of ship.coordinates) {
+                // radish attacks
+                const hitResult = game.attack(coord[0], coord[1]);
+                expect(hitResult).toBe(true);
+                expect(game.players.blue.board.board[coord[0]][coord[1]]).toBe(69); // Hit!
+                
+                // lancer's turn
+                game.switchTurn();
+                game.attack(0, 0);
+                game.switchTurn(); // back to radish
+            }
         }
-    }
+        
+        console.table(game.players.blue.board.board);
+        
+        // check game 2 result
+        const game2Result = game.checkGameState();
+        expect(game2Result.isGameOver).toBe(true);
+        expect(game2Result.whoLost.name).toBe("lancer");
+    });
     
-    console.table(game.players.blue.board.board);
+    test("attack should return false when attacking same coordinate twice", () => {
+        const game = new GameController();
+        
+        game.makePlayers("player1", "blue");
+        game.makePlayers("player2", "red");
+        
+        game.randomizer();
+        game.switchTurn();
+        game.randomizer();
+        game.switchTurn();
+        
+        // Get a coordinate with a ship
+        const targetShip = game.players.red.board.placedShips[0];
+        const [x, y] = targetShip.coordinates[0];
+        
+        // First attack should succeed
+        const firstAttack = game.attack(x, y);
+        expect(firstAttack).toBe(true);
+        expect(game.players.red.board.board[x][y]).toBe(69);
+        
+        // Second attack on same spot should fail
+        const secondAttack = game.attack(x, y);
+        expect(secondAttack).toBe(false);
+    });
     
-    const game2Result = game.checkGameState();
-    expect(game2Result.isGameOver).toBe(true);
-    expect(game2Result.whoLost.name).toBe("lancer");
-   
-});
+    test("attack on empty cell should mark as miss", () => {
+        const game = new GameController();
+        
+        game.makePlayers("player1", "blue");
+        game.makePlayers("player2", "red");
+        
+        game.randomizer();
+        game.switchTurn();
+        game.randomizer();
+        game.switchTurn();
+        
+        // Find an empty cell (value 99)
+        let emptyX, emptyY;
+        const board = game.players.red.board.board;
+        
+        outerLoop: for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                if (board[i][j] === 99) {
+                    emptyX = i;
+                    emptyY = j;
+                    break outerLoop;
+                }
+            }
+        }
+        
+        // Attack empty cell
+        const missResult = game.attack(emptyX, emptyY);
+        expect(missResult).toBe(true);
+        expect(game.players.red.board.board[emptyX][emptyY]).toBe(-1); // Miss marker
+    });
 });
