@@ -16,7 +16,9 @@ export class Player {
     getBoard(){
         return this.board.getBoard();
     }
-
+    changePosition(ship){
+        this.board.changePosition(ship);
+    }
     pickShip(shipID){
         this.pickedShip = this.board.ships[shipID]; 
         return this.pickedShip;
@@ -53,7 +55,7 @@ export class Player {
         };
         for (let ship of this.board.ships) {
             if (Math.random() < 0.5) {
-                ship.changePosition();
+                this.changePosition(ship);
             }
             while (!this.#isPlaced(ship)){
                 if (this.board.canPlace(ship, this.#randomizer0_9(), this.#randomizer0_9())){

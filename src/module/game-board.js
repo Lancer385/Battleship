@@ -37,7 +37,9 @@ export class Gameboard {
     return this.board.map((row) => [...row]);
   }
 
-
+  changePosition(ship){
+      ship.changePosition();
+  }
   placeShip(ship) { // ship here is this.ships[shipID]
     if (!ship) {
         return;
