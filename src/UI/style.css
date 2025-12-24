@@ -7,15 +7,15 @@ body {
     background-color: #454545;
 }
 
-.hidden {
-    display: none;
-}
+
+/* the game container */
 .container {
     overflow: hidden;
     flex-direction: column;
     align-self: center;
     width: 1000px;
     height: 600px;
+    background-color: #2e2e32;
     border-radius: 12px;
     box-shadow: 
         0 2px 3px -1px rgba(0, 0, 0, 0.2),
@@ -23,49 +23,77 @@ body {
         0 1px 10px 0 rgba(0, 0, 0, 0.1);  
 }
 
-footer, header {
+/* header and footer */
+.controls, .tools{
     display: flex;
     height: 10%;
 }
 
-.place-ships{
+.title{
     width: 30%;
-    background-color: #2e2e32;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: xx-large;
+    color: #f6f5f4;
+    font-weight: bolder;
 }
-.red-controls, .blue-controls {
+.red-title, .blue-title {
     width: 35%;
 }
-.red-controls {
+.red-title {
     background-color: #a51d2d;
 }
-.blue-controls {
+.blue-title {
     background-color: #1c71d8;
 }
 
+/* the board */
 .board {
-    background-color: #2e2e32;
     display: flex;
-    height: 80%;
+    height: 75%;
+}
+
+.letter-coords {
+    height: 5%;
 }
 
 .sea {
     overflow: hidden;
-    background-color: #1a9b8e;
+    gap: 2px;
+    padding: 2px;
+    background: #117065;
     width: 47.5%;
-    display: grid;
+    display: grid; 
     grid-template-rows: repeat(10, 1fr);
     grid-template-columns: repeat(10, 1fr);
 }
 
 .cell {
-    border: 1px solid;
-    border-radius: 10px;
-    background: none;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border: none;
+    background: #1a9b8e;
+    border-radius: 6px;
+    box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.15),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.cell:hover {
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        0 2px 4px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.cell:active {
+    box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
 }
 .red {
     border-radius: 10px 0 0 10px;
-    /* top-left | top-right | bottom-right | bottom-left */
 }
 
 .blue {
@@ -77,13 +105,9 @@ footer, header {
 
 
 
-footer {
-    background-color: #2e2e32;
-}
 
 
-
-
+/* the menu */
 form {
     overflow: hidden;
     flex-direction: column;
@@ -149,3 +173,8 @@ form button:hover {
     background-color: #a51d2d;
 }
 
+
+
+.hidden {
+    display: none;
+}

@@ -7,29 +7,38 @@
     <title>Battleship</title>
   </head>
   <body>
-      <form id="make-player">
-        <div id = "names">
-          <div id="blue-name">
-            <input type="text" name="blue" placeholder="Name your admiral" required>
-          </div>
-          <div id="red-name">
-            <input type="text" name="red"placeholder="Name your marshal" required>
-          </div>
+    <form id="make-player">
+      <div id = "names">
+        <div id="blue-name">
+          <input type="text" name="blue" placeholder="Name your admiral" required>
         </div>
-        <button type="submit" >BEGIN THE GAME</button>
-      </form>
+        <div id="red-name">
+          <input type="text" name="red"placeholder="Name your marshal" required>
+        </div>
+      </div>
+      <button type="submit" >BEGIN THE GAME</button>
+    </form>
     <div class="container hidden">
-      <header class="controls">
-        <div class="blue-controls"></div>
-        <div class="place-ships"></div>
-        <div class="red-controls"></div>
-      </header>
+      <div class="controls">
+        <div class="blue-title"></div>
+        <div class="title">Battleship</div>
+        <div class="red-title"></div>
+      </div>
+      <div class="letter-coords">
+        <div class="blue-coords"></div>
+        <div class="seprator"></div>
+        <div class="red-coords"></div>
+      </div>
       <div class="board">
         <div class="sea blue"></div>
         <div class="separator"></div>
         <div class="sea red"></div>
       </div>
-      <footer class="my-github"></footer>
+      <div class="tools">
+        <input type="text" name="placeShip" id="placeShip" maxlength="2">
+        <button>placeShip</button>
+        <button>Randomize your placement</button>
+      </div>
     </div>
   </body>
 </html>
