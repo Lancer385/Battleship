@@ -19,8 +19,8 @@ export class Player {
     changePosition(ship){
         this.board.changePosition(ship);
     }
-    pickShip(shipID){
-        this.pickedShip = this.board.ships[shipID]; 
+    pickShip(ship){
+        this.pickedShip = ship; 
         return this.pickedShip;
     }
 
@@ -30,6 +30,12 @@ export class Player {
 
     isSunk(ship){
         return this.board.isSunk(ship);
+    }
+    getShips(){
+        return this.board.getShips();
+    }
+    getPlacedShips(){
+        return this.board.getPlacedShips();
     }
     placePlayerShip(x, y){
         if (!this.pickedShip || this.#isPlaced(this.pickedShip)) {

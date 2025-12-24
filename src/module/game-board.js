@@ -32,6 +32,13 @@ export class Gameboard {
   getBoard(){
     return this.board;
   }
+  getShips(){
+      return this.ships;
+  }
+
+  getPlacedShips(){
+    return this.placedShips;
+  }
   // used for validation
   makeMockBoard() {
     return this.board.map((row) => [...row]);

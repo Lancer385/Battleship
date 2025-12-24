@@ -13,8 +13,8 @@ body {
     overflow: hidden;
     flex-direction: column;
     align-self: center;
-    width: 1000px;
-    height: 600px;
+    width: 70%;
+    height: 90%;
     background-color: #2e2e32;
     border-radius: 12px;
     box-shadow: 
@@ -105,8 +105,6 @@ body {
 
 
 
-
-
 /* the menu */
 form {
     overflow: hidden;
@@ -172,7 +170,6 @@ form button:hover {
 #red-name {
     background-color: #a51d2d;
 }
-
 
 
 .hidden {
