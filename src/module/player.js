@@ -1,8 +1,9 @@
 import { Gameboard } from "./game-board.js";
 
 export class Player {
-    constructor(name, identity){
+    constructor(name, id, identity){
         this.name = name;
+        this.id = id
         this.identity = identity;
         this.board = new Gameboard();
         this.pickedShip = null;
@@ -15,6 +16,9 @@ export class Player {
     }
     getBoard(){
         return this.board.getBoard();
+    }
+    getID(){
+        return this.id;
     }
     changePosition(ship){
         this.board.changePosition(ship);
