@@ -11,6 +11,12 @@ export class DOM {
         };
         this.menu = document.querySelector("form")
         this.gameUI = document.querySelector(".container");
+        this.shipOptions = document.querySelector("#select-ship")
+        this.inputShip = document.querySelector("#place-ship");
+        this.buttons = {
+            submit: document.querySelector("#submit-ship"),
+            randomize: document.querySelector("#randomize")
+        }
     }
 
     updateGrid(player){
@@ -36,22 +42,65 @@ export class DOM {
             this.game.makePlayers(red);
             this.menu.classList.add("hidden");
             this.gameUI.classList.remove("hidden");
-            document.querySelector("body").style.background = `linear-gradient(to left,#3d1419 50%,#0d2f4d 50%)`
+            this.#backgroundTransition();
+            this.updateGrid(this.game.activePlayer)
+            this.selectShips()
         });
     }; 
+ 
+    selectShips(){
+        let ships = this.getShips();
+        for (let ship of ships){
+            let item = document.createElement("option");
+            [item.textContent, item.value] = [ship.name, ship.name];
+            this.shipOptions.appendChild(item);
+        }
+    }
+
+    placeShip(){
+        this.buttons.submit.addEventListener("click", () => {
+            this.pickAndPlaceShip()}
+        )
+    }
+
+    pickAndPlaceShip(){
+        this.game.placeShip(this.#findShipByName());
+        let coord = this.#coordinateTranslate()
+        this.game.placeShip(coord[0], coord[1]);
+        console.table(this.game.getBoard())
+    }
+    getShips(){
+        return this.game.getShips();
+    }
+
+    viewShips(){
+        this.inputShip.addEventListener('input', (event) => {
+            if (event.target.value.length === 2){
+                let ship = this.#findShipByName();
+                console.log(ship)
+            }
+        })
+    }
+
+    #backgroundTransition(){
+        document.querySelector("body").style.background = `linear-gradient(to left,#3d1419 50%,#0d2f4d 50%)`
+    }
+
+    #coordinateTranslate(){
+        if (!this.inputShip.value){
+            return [99,99];
+        }
+        let arr = this.inputShip.value.split("");
+        let [char, num] = arr;
+        arr = [char.toUpperCase().charCodeAt() - 65, num - 1];
+        return arr;
+    }
+
+    #findShipByName(){
+        return this.getShips().find((e) => e.name === this.shipOptions.value);
+    }
+
 }
-
-
-const controls = {
-    blue: document.querySelector(".blue-controls"),
-    red : document.querySelector(".red-controls")
-}
-
-const sea = {
-    blue: document.querySelector(".blue-sea"),
-    red: document.querySelector(".red-sea")
-}
-
 
 
 
