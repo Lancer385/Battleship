@@ -17,7 +17,8 @@ export class DOM {
         this.inputShip = document.querySelector("#place-ship");
         this.buttons = {
             submit: document.querySelector("#submit-ship"),
-            randomize: document.querySelector("#randomize")
+            randomize: document.querySelector("#randomize"),
+            start : document.querySelector("#start-game")
         }
     }
 
@@ -49,6 +50,7 @@ export class DOM {
             this.#backgroundTransition();
             this.makeGrid()
             this.#selectShip()
+            this.randomizePlacement();
         });
     }; 
  
@@ -69,15 +71,22 @@ export class DOM {
         })
     }
 
-
+    resetGrid(){
+        document.querySelectorAll(`button[data-id ="${this.game.getID()}"]`).forEach((node) => {
+            node.textContent = 99;
+        })
+    }
     randomizer(){
         this.buttons.randomize.addEventListener('click', () => {
-            this.game.randomizer();
-            this.#updateGrid();
+            this.randomizePlacement();
         })
     }
 
-
+    randomizePlacement(){
+            this.resetGrid();
+            this.game.randomizePlacement();
+            this.#updateGrid();
+    }
     switchTurn(){
         this.game.switchTurn();
     }
@@ -85,8 +94,33 @@ export class DOM {
         return this.game.getShips();
     }
 
-
-
+    startGame(){
+        this.buttons.start.addEventListener("click", () => {
+            this.buttons.randomize.classList.add("hidden")
+            this.buttons.start.classList.add("hidden");
+            this.switchTurn();
+            this.randomizePlacement();
+            this.switchTurn();
+            this.attack();
+        })
+    }
+    attack(){
+        const cells = document.querySelectorAll(".cell");
+        for (let cell of cells) {
+            if (this.#getPlayerByID(cell.dataset.id).identity === human){
+                cell.classList.add("unClickable");
+            }
+            cell.addEventListener("click", (e) => {
+                let row = e.target.dataset.row
+                let col = e.target.dataset.column
+                if(this.game.attack([row, col])){
+                   e.target.textContent = this.game.getOpponent().getBoard()[row][col];
+                   this.switchTurn();
+                   console.table(this.game.getActivePlayer().getBoard())
+                };
+            })
+        }
+    }
     #backgroundTransition(){
         document.querySelector("body").style.background = `linear-gradient(to left,#3d1419 50%,#0d2f4d 50%)`
     }
@@ -123,9 +157,11 @@ export class DOM {
         arr = [char.toUpperCase().charCodeAt() - 65, num - 1];
         return arr;
     }
-
+    #getPlayerByID(id){
+        return Object.values(this.game.players).find(player => player.id === Number(id) )
+    }
     #findShipByName(){
-        return this.getShips().find((e) => e.name === this.shipOptions.value);
+        return this.getShips().find(e => e.name === this.shipOptions.value);
     }
 
 }
