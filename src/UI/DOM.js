@@ -1,6 +1,8 @@
 import { GameController } from "../module/game-controller";
 import './style.css';
 
+const human = 0;
+const cpu = 1;
 
 export class DOM {
     constructor(){
@@ -40,8 +42,8 @@ export class DOM {
             e.preventDefault();
             const blue = this.menu.elements["blue"].value;
             const red = this.menu.elements["red"].value;
-            this.game.makePlayers(blue);
-            this.game.makePlayers(red);
+            this.game.makeBluePlayer(blue, human);
+            this.game.makeRedPlayer(red, cpu);
             this.menu.classList.add("hidden");
             this.gameUI.classList.remove("hidden");
             this.#backgroundTransition();
@@ -55,9 +57,19 @@ export class DOM {
         this.buttons.submit.addEventListener("click", () => {
             this.#pickAndPlaceShip();
             this.#updateGrid();
+            if (this.game.isPlaced()){
+                this.switchTurn();
+                if (this.game.getActivePlayer().identity === cpu){
+                    this.game.randomizer();
+                    this.#updateGrid();
+                }
+            }
         })
     }
-
+    
+    switchTurn(){
+        this.game.switchTurn();
+    }
     getShips(){
         return this.game.getShips();
     }

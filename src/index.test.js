@@ -103,8 +103,8 @@ describe("Game Controller", () => {
     test("two complete games should be played successfully with reset in between", () => {
         const game = new GameController();
 
-        game.makePlayers("lancer", "blue");
-        game.makePlayers("radish", "red");
+        game.makeBluePlayer("lancer", "blue");
+        game.makeRedPlayer("radish", "red");
         
         // first game
         
@@ -192,8 +192,8 @@ describe("Game Controller", () => {
     test("attack should return false when attacking same coordinate twice", () => {
         const game = new GameController();
         
-        game.makePlayers("player1", "blue");
-        game.makePlayers("player2", "red");
+        game.makeBluePlayer("player1", "blue");
+        game.makeRedPlayer("player2", "red");
         
         game.randomizer();
         game.switchTurn();
@@ -217,8 +217,8 @@ describe("Game Controller", () => {
     test("attack on empty cell should mark as miss", () => {
         const game = new GameController();
         
-        game.makePlayers("player1", "blue");
-        game.makePlayers("player2", "red");
+        game.makeBluePlayer("player1", "blue");
+        game.makeRedPlayer("player2", "red");
         
         game.randomizer();
         game.switchTurn();
