@@ -59,7 +59,8 @@ export class Gameboard {
   isPlaced(){
     return this.placedShips.length === this.ships.length;
   }
-  receiveAttack(x, y){
+  receiveAttack(coords){
+    const [x, y] = coords;
     if (this.board[x][y] === -1 /* (default number for misses) */  || this.board[x][y] === 69 /* nice! */ ){
       return false; // can't hit this, try again
     }
@@ -107,7 +108,7 @@ export class Gameboard {
       for (let j = 0; j < directions.length; j++) {
         let checkX = coordinates[i][0] + directions[j][0];
         let checkY = coordinates[i][1] + directions[j][1];
-        if (checkX < 0 || checkX >= 10 || checkY < 0 || checkY >= 10) {
+        if (checkX < 0 || checkX > 9 || checkY < 0 || checkY > 9) {
           continue;
         }
         if (board[checkX][checkY] !== 99 && board[checkX][checkY] !== ship.id) {
@@ -118,8 +119,9 @@ export class Gameboard {
     return true;
   }
 
-  canPlace(ship, x, y) {
-    if (x < 0 || y < 0 || x > 10 || y > 10) {
+  canPlace(ship, coords) {
+    const [x, y] = coords
+    if (x < 0 || y < 0 || x > 9 || y > 9) {
       return false;
     }
     ship.setPosition(x, y);

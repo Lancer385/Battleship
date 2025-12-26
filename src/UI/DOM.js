@@ -29,7 +29,7 @@ export class DOM {
                     const cell = document.createElement("button");
                     cell.classList.add("cell");
                     cell.dataset.row = rowIndex;
-                    x.classList.contains("blue") ? cell.id = 1 : cell.id = 2;
+                    x.classList.contains("blue") ? cell.dataset.id = 1 : cell.dataset.id = 2;
                     cell.dataset.column = colIndex;
                     cell.textContent = column;
                     x.appendChild(cell);
@@ -57,21 +57,7 @@ export class DOM {
         this.buttons.submit.addEventListener("click", () => {
             this.#pickAndPlaceShip();
             this.#updateGrid();
-            if (this.game.isPlaced()){
-                this.switchTurn();
-                if (this.game.getActivePlayer().identity === cpu){
-                    this.game.randomizer();
-                    this.#updateGrid();
-                }
-            }
         })
-    }
-    
-    switchTurn(){
-        this.game.switchTurn();
-    }
-    getShips(){
-        return this.game.getShips();
     }
 
     viewShips(){
@@ -82,6 +68,24 @@ export class DOM {
             }
         })
     }
+
+
+    randomizer(){
+        this.buttons.randomize.addEventListener('click', () => {
+            this.game.randomizer();
+            this.#updateGrid();
+        })
+    }
+
+
+    switchTurn(){
+        this.game.switchTurn();
+    }
+    getShips(){
+        return this.game.getShips();
+    }
+
+
 
     #backgroundTransition(){
         document.querySelector("body").style.background = `linear-gradient(to left,#3d1419 50%,#0d2f4d 50%)`
@@ -99,7 +103,7 @@ export class DOM {
         for (let [rowIndex, row] of board.entries()){
             for (let [colIndex, col] of row.entries()){
                 if (col !== 99){
-                    document.querySelector(`button[id ="${this.game.getID()}"][data-row="${rowIndex}"][data-column="${colIndex}"]`).textContent = col;
+                    document.querySelector(`button[data-id ="${this.game.getID()}"][data-row="${rowIndex}"][data-column="${colIndex}"]`).textContent = col;
                 };
             }
         }
@@ -107,7 +111,7 @@ export class DOM {
     #pickAndPlaceShip(){
         this.game.pickShip(this.#findShipByName());
         let coord = this.#coordinateTranslate()
-        this.game.placeShip(coord[0], coord[1]);
+        this.game.placeShip(coord);
         console.table(this.game.getBoard());
     }
     #coordinateTranslate(){

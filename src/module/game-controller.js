@@ -65,12 +65,12 @@ export class GameController {
         this.activePlayer.pickShip(ship);
     }
 
-    placeShip(x, y){
-        return this.activePlayer.placePlayerShip(x, y);
+    placeShip(coords){
+        return this.activePlayer.placePlayerShip(coords);
     }
 
-    attack(x, y){
-        return this.getOpponent().receiveAttack(x, y);
+    attack(coords){
+        return this.getOpponent().receiveAttack(coords);
     }
 
     checkGameState(){
