@@ -64,6 +64,7 @@ export class Player {
         return this.board.receiveAttack(coords);
     }
     randomizePlacement(){
+    this.board.generateCoordinates();
         if (this.board.placedShips.length !== 0) {
             this.resetBoardState();
         };
@@ -72,15 +73,20 @@ export class Player {
                 this.changePosition(ship);
             }
             while (!this.#isPlaced(ship)){
-                if (this.board.canPlace(ship, this.randomizer0_9())){
+                if (this.board.canPlace(ship, this.randomizer())){
                     this.board.placeShip(ship);
                 }
             }
         }
+    this.board.resetCoordinates();
     }
 
-    randomizer0_9(){
-        return [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+    randomizer(){
+        const coords = this.board.generatedCoordinates;
+        const random = Math.floor(Math.random() * coords.length);
+        const value = coords[random];
+        coords.splice(random, 1);
+        return value;
     }
 
     #isPlaced(ship){
@@ -93,7 +99,7 @@ export class Player {
         }
         this.board.placedShips.length = 0;
         this.board.resetBoard();
-        this.board.createBoard();
+        this.board.makeBoard();
     }
 
 }

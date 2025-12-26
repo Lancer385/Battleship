@@ -57,7 +57,7 @@ export class GameController {
         return this.activePlayer === this.players.red ? this.players.blue: this.players.red;
     }
 
-    randomizer(){
+    randomizePlacement(){
         this.activePlayer.randomizePlacement();
     }
 
@@ -66,7 +66,7 @@ export class GameController {
     }
 
     placeShip(coords){
-        return this.activePlayer.placePlayerShip(coords);
+        return this.activePlayer.placeShip(coords);
     }
 
     attack(coords){

@@ -35,12 +35,18 @@
         <div class="sea red"></div>
       </div>
       <div class="tools">
-        <label for="select-ship">Select your ship:</label>
-        <select name="select-ship" id="select-ship"></select>
-        <label for="place-ship">Place your ship:</label>
-        <input type="text" name="place-ship" id="place-ship" maxlength="2">
-        <button id="submit-ship">submit</button>
-        <button id="randomize">Randomize your placement</button>
+        <div class="options">
+          <div class="picking hidden">
+          <label for="select-ship">Select your ship:</label>
+          <select name="select-ship" id="select-ship"></select>
+          <label for="place-ship">Place your ship:</label>
+          <input type="text" name="place-ship" id="place-ship" maxlength="2">
+          <button id="submit-ship">submit</button>
+          </div>
+
+          <button id="randomize">Randomize your placement</button>
+          <button id="start-game">Start The Game</button>
+        </div>
       </div>
     </div>
   </body>

@@ -12,8 +12,21 @@ export class Gameboard {
      new Ship("Destroyer", 2, 4, 0)
     ];
     this.placedShips = [];
+    this.generatedCoordinates = [];
   }
-  
+  generateCoordinates(){
+    if (this.generatedCoordinates.length === 0){
+      for (let [rowIndex, row] of this.board.entries()){
+        for (let [colIndex, col ] of row.entries()){
+          this.generatedCoordinates.push([rowIndex, colIndex]);
+        }
+      }
+    }
+  }
+  resetCoordinates(){
+    this.generatedCoordinates = [];
+    this.generateCoordinates();
+  }
   resetBoard() {
     this.board.length = 0;
   }
