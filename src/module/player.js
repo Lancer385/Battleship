@@ -20,6 +20,7 @@ export class Player {
     getID(){
         return this.id;
     }
+
     isPlaced(){
         return this.board.isPlaced();
     }
@@ -44,11 +45,11 @@ export class Player {
     getPlacedShips(){
         return this.board.getPlacedShips();
     }
-    placePlayerShip(x, y){
+    placeShip(coords){
         if (!this.pickedShip || this.#isPlaced(this.pickedShip)) {
             return false;
         }
-        if(this.board.canPlace(this.pickedShip, x, y)){
+        if(this.board.canPlace(this.pickedShip, coords)){
             this.board.placeShip(this.pickedShip);
             this.pickedShip = null;
             return true;
@@ -59,8 +60,8 @@ export class Player {
         return this.board.reportSunkenShips();
     }
     
-    receiveAttack(x, y) {
-        return this.board.receiveAttack(x, y);
+    receiveAttack(coords) {
+        return this.board.receiveAttack(coords);
     }
     randomizePlacement(){
         if (this.board.placedShips.length !== 0) {
@@ -71,15 +72,15 @@ export class Player {
                 this.changePosition(ship);
             }
             while (!this.#isPlaced(ship)){
-                if (this.board.canPlace(ship, this.#randomizer0_9(), this.#randomizer0_9())){
+                if (this.board.canPlace(ship, this.randomizer0_9())){
                     this.board.placeShip(ship);
                 }
             }
         }
     }
 
-    #randomizer0_9(){
-        return Math.floor(Math.random() * 10);
+    randomizer0_9(){
+        return [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
     }
 
     #isPlaced(ship){

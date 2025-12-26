@@ -30,13 +30,13 @@ describe("Game Board", () => {
 
         // place first ship (destroyer - length 2)
         const ship1 = board.ships[4]; // Destroyer
-        if (board.canPlace(ship1, 0, 3)) {
+        if (board.canPlace(ship1, [0, 3])) {
             board.placeShip(ship1);
         }
 
         // try placing another one illegally (diagonal neighbor)
         const ship2 = board.ships[3]; // Submarine
-        if (board.canPlace(ship2, 1, 3)) {
+        if (board.canPlace(ship2, [1, 3])) {
             board.placeShip(ship2);
         }
 
@@ -52,7 +52,7 @@ describe("Game Board", () => {
         board.makeBoard();
 
         const ship = board.ships[2]; // Cruiser - length 3
-        if (board.canPlace(ship, 0, 8)) { // would go to columns 8, 9, 10 (out of bounds)
+        if (board.canPlace(ship, [0, 8])) { // would go to columns 8, 9, 10 (out of bounds)
             board.placeShip(ship);
         }
 
@@ -71,7 +71,7 @@ describe("Game Board", () => {
 
         const ship = board.ships[2]; // Cruiser - length 3
         ship.changePosition(); // make it vertical
-        if (board.canPlace(ship, 8, 5)) {
+        if (board.canPlace(ship, [8, 5])) {
             board.placeShip(ship);
         }
 
@@ -85,13 +85,13 @@ describe("Game Board", () => {
 
         const ship1 = board.ships[4]; // Destroyer
         ship1.changePosition(); // vertical
-        if (board.canPlace(ship1, 3, 3)) {
+        if (board.canPlace(ship1, [3, 3])) {
             board.placeShip(ship1);
         }
 
         const ship2 = board.ships[3]; // Submarine
         ship2.changePosition(); // vertical
-        if (board.canPlace(ship2, 2, 4)) {
+        if (board.canPlace(ship2, [2, 4])) {
             board.placeShip(ship2);
         }
 
@@ -128,13 +128,13 @@ describe("Game Controller", () => {
         for (let ship of radishShips) {
             for (let coord of ship.coordinates) {
                 // lancer attacks
-                const hitResult = game.attack(coord[0], coord[1]);
+                const hitResult = game.attack(coord);
                 expect(hitResult).toBe(true);
                 expect(game.players.red.board.board[coord[0]][coord[1]]).toBe(69); // Hit!
                 
                 // radish's turn
                 game.switchTurn();
-                game.attack(0, 0);
+                game.attack([0, 0]);
                 game.switchTurn(); // back to lancer
             }
         }
@@ -170,13 +170,13 @@ describe("Game Controller", () => {
         for (let ship of lancerShips) {
             for (let coord of ship.coordinates) {
                 // radish attacks
-                const hitResult = game.attack(coord[0], coord[1]);
+                const hitResult = game.attack(coord);
                 expect(hitResult).toBe(true);
                 expect(game.players.blue.board.board[coord[0]][coord[1]]).toBe(69); // Hit!
                 
                 // lancer's turn
                 game.switchTurn();
-                game.attack(0, 0);
+                game.attack([0, 0]);
                 game.switchTurn(); // back to radish
             }
         }
@@ -205,12 +205,12 @@ describe("Game Controller", () => {
         const [x, y] = targetShip.coordinates[0];
         
         // First attack should succeed
-        const firstAttack = game.attack(x, y);
+        const firstAttack = game.attack([x, y]);
         expect(firstAttack).toBe(true);
         expect(game.players.red.board.board[x][y]).toBe(69);
         
         // Second attack on same spot should fail
-        const secondAttack = game.attack(x, y);
+        const secondAttack = game.attack([x, y]);
         expect(secondAttack).toBe(false);
     });
     
@@ -240,7 +240,7 @@ describe("Game Controller", () => {
         }
         
         // Attack empty cell
-        const missResult = game.attack(emptyX, emptyY);
+        const missResult = game.attack([emptyX, emptyY]);
         expect(missResult).toBe(true);
         expect(game.players.red.board.board[emptyX][emptyY]).toBe(-1); // Miss marker
     });
