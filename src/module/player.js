@@ -20,6 +20,9 @@ export class Player {
     getID(){
         return this.id;
     }
+    isPlaced(){
+        return this.board.isPlaced();
+    }
     changePosition(ship){
         this.board.changePosition(ship);
     }

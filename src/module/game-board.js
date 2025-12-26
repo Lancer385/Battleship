@@ -56,7 +56,9 @@ export class Gameboard {
     }
     this.placedShips.push(ship);
   }
-
+  isPlaced(){
+    return this.placedShips.length === this.ships.length;
+  }
   receiveAttack(x, y){
     if (this.board[x][y] === -1 /* (default number for misses) */  || this.board[x][y] === 69 /* nice! */ ){
       return false; // can't hit this, try again
