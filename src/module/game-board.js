@@ -70,7 +70,7 @@ export class Gameboard {
       ship.changePosition();
   }
 
-  placeShip(ship) { // ship here is this.ships[shipID]
+  placeShip(ship) {
     if (!ship) {
         return;
     }
