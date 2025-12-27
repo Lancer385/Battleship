@@ -8,3 +8,4 @@ UI.viewShips();
 UI.placeShip();
 UI.randomizer();
 UI.startGame()
+UI.retry();

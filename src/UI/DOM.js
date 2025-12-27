@@ -1,3 +1,4 @@
+import { GameController } from '../module/game-controller';
 import './style.css';
 
 const human = 0;
@@ -12,12 +13,15 @@ export class DOM {
         };
         this.menu = document.querySelector("form")
         this.gameUI = document.querySelector(".container");
+        this.gameOver = document.querySelector(".game-over");
         this.shipOptions = document.querySelector("#select-ship")
         this.inputShip = document.querySelector("#place-ship");
+        this.winner = document.querySelector(".winner");
         this.buttons = {
             submit: document.querySelector("#submit-ship"),
             randomize: document.querySelector("#randomize"),
-            start : document.querySelector("#start-game")
+            start : document.querySelector("#start-game"),
+            retry: document.querySelector("#retry")
         }
     }
 
@@ -27,7 +31,7 @@ export class DOM {
             for (let [rowIndex, row] of board.entries()){
                 for (let [colIndex, column] of row.entries()){
                     const cell = document.createElement("button");
-                    cell.classList.add("cell");
+                    cell.classList.add("cell", "unClickable");
                     cell.dataset.row = rowIndex;
                     x.classList.contains("blue") ? cell.dataset.id = 1 : cell.dataset.id = 2;
                     cell.dataset.column = colIndex;
@@ -110,8 +114,8 @@ export class DOM {
     attack(){
         const cells = document.querySelectorAll(".cell");
         for (let cell of cells) {
-            if (this.#getPlayerByID(cell.dataset.id).identity === human){
-                cell.classList.add("unClickable");
+            if (this.#getPlayerByID(cell.dataset.id).identity === cpu){
+                cell.classList.remove("unClickable");
             }
             cell.addEventListener("click", (e) => {
                 let row = e.target.dataset.row
@@ -134,7 +138,12 @@ export class DOM {
     #checkGameState(){
         const gameState = this.game.checkGameState()
         if (gameState.isGameOver){
-            console.log(`loser is: ${gameState.whoLost.name}`)
+            this.gameOver.classList.remove("hidden");
+            for (let player of Object.values(this.game.players)){
+                if (gameState.whoLost !== player){
+                    this.winner.textContent = `${player.name}`
+                }
+            }
         }
     }
     #backgroundTransition(){
@@ -159,11 +168,23 @@ export class DOM {
                     if (col === 69){
                         cell.classList.add("hit");
                     }
-                    if (col >= 0 && col <= this.getShips().length && this.game.getActivePlayer().identity === human){
+                    if (col >= 0 && col <= this.getShips().length){
                         cell.classList.add("piece")
                     }
             }
         }
+    }
+    retry(){
+        this.buttons.retry.addEventListener("click", () =>{
+            this.gameOver.classList.add("hidden");
+            this.game.resetTheGame();
+            this.resetGrid();
+            for (let cell of document.querySelectorAll(".cell")){
+                cell.classList.add("unClickable")
+            };
+            this.buttons.randomize.classList.remove("hidden")
+            this.buttons.start.classList.remove("hidden");
+        })
     }
     #toggleClick(id){
         for (let cell of document.querySelectorAll(`button[data-id="${id}"]`)){
