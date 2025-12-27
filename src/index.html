@@ -10,10 +10,12 @@
     <form id="make-player">
       <div id = "names">
         <div id="blue-name">
-          <input type="text" name="blue" placeholder="Name your admiral" required>
+          <label for="blue">Name Your Admiral</label>
+          <input type="text" name="blue" placeholder="" value="Nelson" required>
         </div>
         <div id="red-name">
-          <input type="text" name="red"placeholder="Name your marshal" required>
+          <label for="blue">Name Your Marshal</label>
+          <input type="text" name="red"placeholder="Name your marshal" value="Zhukov" required>
         </div>
       </div>
       <button type="submit" >BEGIN THE GAME</button>
@@ -36,14 +38,14 @@
       </div>
       <div class="tools">
         <div class="options">
+          <!-- unused -->
           <div class="picking hidden">
-          <label for="select-ship">Select your ship:</label>
-          <select name="select-ship" id="select-ship"></select>
-          <label for="place-ship">Place your ship:</label>
-          <input type="text" name="place-ship" id="place-ship" maxlength="2">
-          <button id="submit-ship">submit</button>
+            <label for="select-ship">Select your ship:</label>
+            <select name="select-ship" id="select-ship"></select>
+            <label for="place-ship">Place your ship:</label>
+            <input type="text" name="place-ship" id="place-ship" maxlength="2">
+            <button id="submit-ship">submit</button>
           </div>
-
           <button id="randomize">Randomize your placement</button>
           <button id="start-game">Start The Game</button>
         </div>

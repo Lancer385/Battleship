@@ -11,6 +11,10 @@ export class DOM {
             blue : document.querySelector(".blue"),
             red : document.querySelector(".red")
         };
+        this.names = {
+            blue: document.querySelector(".blue-title"),
+            red: document.querySelector(".red-title")
+        }
         this.menu = document.querySelector("form");
         this.gameUI = document.querySelector(".container");
         this.gameOver = document.querySelector(".game-over");
@@ -36,6 +40,8 @@ export class DOM {
             this.menu.classList.add("hidden");
             this.gameUI.classList.remove("hidden");
             this.#backgroundTransition();
+            this.names.blue.textContent = this.game.players.blue.name;
+            this.names.red.textContent = this.game.players.red.name;
             this.makeGrid();
             this.#selectShip();
             this.randomizePlacement();
@@ -56,6 +62,7 @@ export class DOM {
             this.randomizePlacement();
             this.switchTurn();
             this.attack();
+            document.querySelector("body").style.background = "linear-gradient(to left, #3d1419 50%, #1a5080 50%)"
         });
     }
 
@@ -75,10 +82,16 @@ export class DOM {
                    this.#updateGrid();
                    this.game.cpuAttack();
                    setTimeout(() => {
-                     this.#updateGrid();
+                    this.#toggleBackground()
+                   }, 500);
+                   setTimeout(() => {
+                    this.#updateGrid();
+                   }, 1000);                   
+                   setTimeout(() => {
                      this.#toggleClick(this.game.getOpponent().id);
                      this.#checkGameState();
-                   }, 1500);
+                     this.#toggleBackground()
+                   }, 2000);
                 };
             });
         }
@@ -94,6 +107,7 @@ export class DOM {
             };
             this.buttons.randomize.classList.remove("hidden");
             this.buttons.start.classList.remove("hidden");
+            this.#backgroundTransition();
         });
     }
     // helper methods - main methods
@@ -166,11 +180,18 @@ export class DOM {
                     if (col === 69){
                         cell.classList.add("hit");
                     }
-                    if (col >= 0 && col <= this.getShips().length){
+                    if (col >= 0 && col <= this.getShips().length  && this.game.getActivePlayer().identity === human){
                         cell.classList.add("piece");
                     }
             }
         }
+    }
+
+    #toggleBackground(){
+        console.log(document.querySelector("body").style.background)
+        document.querySelector("body").style.background === "linear-gradient(to left, rgb(61, 20, 25) 50%, rgb(26, 80, 128) 50%)"?
+        document.querySelector("body").style.background = "linear-gradient(to left, #6b2430 50%, #0d2f4d 50%)":
+        document.querySelector("body").style.background = "linear-gradient(to left, #3d1419 50%, #1a5080 50%)";
     }
 
     #toggleClick(id){
