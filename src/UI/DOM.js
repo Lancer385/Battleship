@@ -1,12 +1,11 @@
-import { GameController } from "../module/game-controller";
 import './style.css';
 
 const human = 0;
 const cpu = 1;
 
 export class DOM {
-    constructor(){
-        this.game = new GameController();
+    constructor(game){
+        this.game = game;
         this.sea = {
             blue : document.querySelector(".blue"),
             red : document.querySelector(".red")
@@ -32,7 +31,6 @@ export class DOM {
                     cell.dataset.row = rowIndex;
                     x.classList.contains("blue") ? cell.dataset.id = 1 : cell.dataset.id = 2;
                     cell.dataset.column = colIndex;
-                    cell.textContent = column;
                     x.appendChild(cell);
                 }
             }
@@ -73,7 +71,9 @@ export class DOM {
 
     resetGrid(){
         document.querySelectorAll(`button[data-id ="${this.game.getID()}"]`).forEach((node) => {
-            node.textContent = 99;
+            node.classList.remove("piece");
+            node.classList.remove("hit");
+            node.classList.remove("miss");
         })
     }
     randomizer(){
@@ -85,7 +85,10 @@ export class DOM {
     randomizePlacement(){
             this.resetGrid();
             this.game.randomizePlacement();
-            this.#updateGrid();
+            if (this.game.getActivePlayer().identity === human){
+                this.#updateGrid();
+            }
+            
     }
     switchTurn(){
         this.game.switchTurn();
@@ -114,16 +117,16 @@ export class DOM {
                 let row = e.target.dataset.row
                 let col = e.target.dataset.column
                 if(this.game.attack([row, col])){
-                   e.target.textContent = this.game.getOpponent().getBoard()[row][col];
                    this.#checkGameState();
                    this.#toggleClick(this.game.getOpponent().id)
                    this.switchTurn();
+                   this.#updateGrid()
                    this.game.cpuAttack();
                    setTimeout(() => {
                      this.#updateGrid()
                      this.#toggleClick(this.game.getOpponent().id)
                      this.#checkGameState();
-                   }, 3000);
+                   }, 1500);
                 };
             })
         }
@@ -146,11 +149,19 @@ export class DOM {
         }
     }
     #updateGrid(){
-        const board = this.game.getBoard()
+        const board = this.game.getBoard();
         for (let [rowIndex, row] of board.entries()){
             for (let [colIndex, col] of row.entries()){
                 let cell = document.querySelector(`button[data-id ="${this.game.getID()}"][data-row="${rowIndex}"][data-column="${colIndex}"]`);
-                    cell.textContent = col;
+                    if (col === -1 ){
+                        cell.classList.add("miss");
+                    }
+                    if (col === 69){
+                        cell.classList.add("hit");
+                    }
+                    if (col >= 0 && col <= this.getShips().length && this.game.getActivePlayer().identity === human){
+                        cell.classList.add("piece")
+                    }
             }
         }
     }

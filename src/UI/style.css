@@ -42,9 +42,11 @@ body {
     width: 35%;
 }
 .red-title {
+    border-bottom-left-radius: 10px;
     background-color: #a51d2d;
 }
 .blue-title {
+    border-bottom-right-radius: 10px;
     background-color: #1c71d8;
 }
 
@@ -181,3 +183,19 @@ form button:hover {
   pointer-events: none;
   cursor: default;
 }
+
+
+
+.piece {
+    background-color: #7a5c3e;
+}
+
+.hit {
+    background-color: #c6463d;
+}
+
+.miss {
+    background-color: #4f6f8f;
+}
+
+
