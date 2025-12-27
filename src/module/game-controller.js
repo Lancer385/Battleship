@@ -9,9 +9,11 @@ export class GameController {
         };
         this.activePlayer = null;
     }
+
     getID(){
         return this.activePlayer.getID();
     }
+
     getShips(){
         return this.getActivePlayer().getShips();
     }
@@ -26,15 +28,18 @@ export class GameController {
     getBoard(){
         return this.activePlayer.getBoard();
     }
+
     makeBluePlayer(name, identity){
         this.players.blue = new Player(name, 1, identity);
         this.players.blue.makeBoard();
         this.activePlayer = this.players.blue;
     }
+
     makeRedPlayer(name, identity){
         this.players.red = new Player(name, 2, identity);
         this.players.red.makeBoard();
     }
+
     isPlaced(){
         return this.activePlayer.isPlaced();
     }
@@ -45,6 +50,7 @@ export class GameController {
         }
         return false;
     }
+
     switchTurn(){
         this.activePlayer = this.activePlayer === this.players.blue ? this.players.red : this.players.blue;
     }
@@ -85,13 +91,15 @@ export class GameController {
         }
         return {isGameOver: false};
     }
+
     cpuAttack(){
-        this.activePlayer.generateCoordinates()
-        const random = this.activePlayer.randomizer()
+        this.activePlayer.generateCoordinates();
+        const random = this.activePlayer.randomizer();
         this.attack(random);
-        console.table(this.getOpponent().board.board)
+        console.table(this.getOpponent().board.board);
         this.switchTurn();
     }
+
     resetTheGame(){
         for (let player of Object.values(this.players)){
             player.board = new Gameboard();

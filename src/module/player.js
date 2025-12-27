@@ -3,26 +3,32 @@ import { Gameboard } from "./game-board.js";
 export class Player {
     constructor(name, id, identity){
         this.name = name;
-        this.id = id
+        this.id = id;
         this.identity = identity;
         this.board = new Gameboard();
         this.pickedShip = null;
     }
+
     makeBoard(){
         this.board.makeBoard();
     }
+
     generateCoordinates(){
-        this.board.generateCoordinates()
+        this.board.generateCoordinates();
     }
+
     resetCoordinates(){
         this.board.resetCoordinates();
     }
+
     resetBoard(){
         this.board.resetBoard();
     }
+
     getBoard(){
         return this.board.getBoard();
     }
+
     getID(){
         return this.id;
     }
@@ -30,9 +36,11 @@ export class Player {
     isPlaced(){
         return this.board.isPlaced();
     }
+
     changePosition(ship){
         this.board.changePosition(ship);
     }
+
     pickShip(ship){
         this.pickedShip = ship; 
         return this.pickedShip;
@@ -45,12 +53,15 @@ export class Player {
     isSunk(ship){
         return this.board.isSunk(ship);
     }
+
     getShips(){
         return this.board.getShips();
     }
+
     getPlacedShips(){
         return this.board.getPlacedShips();
     }
+
     placeShip(coords){
         if (!this.pickedShip || this.#isPlaced(this.pickedShip)) {
             return false;
@@ -62,6 +73,7 @@ export class Player {
         }
         return false;
     }
+
     reportSunkenShips() {
         return this.board.reportSunkenShips();
     }
