@@ -96,7 +96,6 @@ export class GameController {
         this.activePlayer.generateCoordinates();
         const random = this.activePlayer.randomizer();
         this.attack(random);
-        console.table(this.getOpponent().board.board);
         this.switchTurn();
     }
 
