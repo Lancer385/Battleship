@@ -230,6 +230,7 @@ form button:hover {
 .winner {
     color: #8ff0a4;
 }
+/* button styles */
 
 #retry {
     width: 200px;
@@ -238,7 +239,7 @@ form button:hover {
 
 #retry, .options button {
   background-color: #3a3a3f;
-  color: #f2f2f1;                     /* brighter than before */
+  color: #f2f2f1; 
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 8px 16px;
@@ -252,7 +253,7 @@ form button:hover {
 }
 
 #retry:hover, .options button:hover {
-  background-color: #434349;          /* hover = slightly lifted */
+  background-color: #434349;
 }
 
 #retry:active, .options button:active {
@@ -260,7 +261,7 @@ form button:hover {
   transform: translateY(1px);
 }
 
-
+/* DOM stuff */
 .hidden {
     display: none;
 }
@@ -269,8 +270,6 @@ form button:hover {
   pointer-events: none;
   cursor: default;
 }
-
-
 
 .piece {
     background-color: #7a5c3e;
