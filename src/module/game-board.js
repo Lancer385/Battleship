@@ -7,9 +7,12 @@ export class Gameboard {
     this.ships = [
      new Ship("Carrier", 5, 0, 0),
      new Ship("Battleship", 4, 1, 0), 
-     new Ship("Cruiser", 3, 2, 0),
+     new Ship("Cruiser", 3, 2, 1),
      new Ship("Submarine", 3, 3, 0),
-     new Ship("Destroyer", 2, 4, 0)
+     new Ship("Destroyer", 2, 4, 1),
+     new Ship("Destroyer Ultra", 2, 5, 1),
+     new Ship("Patrol Boat", 1, 6, 0),
+     new Ship("Speedboat", 1, 7, 0)
     ];
     this.placedShips = [];
     this.generatedCoordinates = [];
