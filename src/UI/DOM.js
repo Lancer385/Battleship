@@ -1,4 +1,3 @@
-import { GameController } from "../module/game-controller";
 import "./style.css";
 
 const human = 0;
