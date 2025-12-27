@@ -11,6 +11,12 @@ export class Player {
     makeBoard(){
         this.board.makeBoard();
     }
+    generateCoordinates(){
+        this.board.generateCoordinates()
+    }
+    resetCoordinates(){
+        this.board.resetCoordinates();
+    }
     resetBoard(){
         this.board.resetBoard();
     }
@@ -63,6 +69,7 @@ export class Player {
     receiveAttack(coords) {
         return this.board.receiveAttack(coords);
     }
+
     randomizePlacement(){
     this.board.generateCoordinates();
         if (this.board.placedShips.length !== 0) {
@@ -92,7 +99,7 @@ export class Player {
     #isPlaced(ship){
         return this.board.placedShips.some(id => id.id === ship.id);
     }
-
+ 
     resetBoardState(){
         for (let ship of this.board.placedShips){
             ship.coordinates.length = 0;

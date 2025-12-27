@@ -115,10 +115,23 @@ export class DOM {
                 let col = e.target.dataset.column
                 if(this.game.attack([row, col])){
                    e.target.textContent = this.game.getOpponent().getBoard()[row][col];
+                   this.#checkGameState();
+                   this.#toggleClick(this.game.getOpponent().id)
                    this.switchTurn();
-                   console.table(this.game.getActivePlayer().getBoard())
+                   this.game.cpuAttack();
+                   setTimeout(() => {
+                     this.#updateGrid()
+                     this.#toggleClick(this.game.getOpponent().id)
+                     this.#checkGameState();
+                   }, 3000);
                 };
             })
+        }
+    }
+    #checkGameState(){
+        const gameState = this.game.checkGameState()
+        if (gameState.isGameOver){
+            console.log(`loser is: ${gameState.whoLost.name}`)
         }
     }
     #backgroundTransition(){
@@ -136,10 +149,14 @@ export class DOM {
         const board = this.game.getBoard()
         for (let [rowIndex, row] of board.entries()){
             for (let [colIndex, col] of row.entries()){
-                if (col !== 99){
-                    document.querySelector(`button[data-id ="${this.game.getID()}"][data-row="${rowIndex}"][data-column="${colIndex}"]`).textContent = col;
-                };
+                let cell = document.querySelector(`button[data-id ="${this.game.getID()}"][data-row="${rowIndex}"][data-column="${colIndex}"]`);
+                    cell.textContent = col;
             }
+        }
+    }
+    #toggleClick(id){
+        for (let cell of document.querySelectorAll(`button[data-id="${id}"]`)){
+            cell.classList.contains("unClickable")? cell.classList.remove("unClickable"): cell.classList.add("unClickable");
         }
     }
     #pickAndPlaceShip(){

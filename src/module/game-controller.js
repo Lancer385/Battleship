@@ -85,7 +85,13 @@ export class GameController {
         }
         return {isGameOver: false};
     }
-
+    cpuAttack(){
+        this.activePlayer.generateCoordinates()
+        const random = this.activePlayer.randomizer()
+        this.attack(random);
+        console.table(this.getOpponent().board.board)
+        this.switchTurn();
+    }
     resetTheGame(){
         for (let player of Object.values(this.players)){
             player.board = new Gameboard();
