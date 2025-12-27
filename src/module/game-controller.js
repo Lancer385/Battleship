@@ -56,7 +56,7 @@ export class GameController {
     }
 
     getActivePlayer(){
-        return this.activePlayer === this.players.red ? this.players.red: this.players.blue;
+        return this.activePlayer;
     }
 
     getOpponent(){

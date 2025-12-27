@@ -93,7 +93,7 @@ export class Gameboard {
       this.board[x][y] = -1; 
     }
     else {
-     this.ships[this.board[x][y]].hit += 1;
+     this.ships[this.board[x][y]].gotHit();
      this.board[x][y] = 69;
     }
     return true; // Goodjob hitting or... missing. it's your opponent's turn
