@@ -188,7 +188,6 @@ export class DOM {
     }
 
     #toggleBackground(){
-        console.log(document.querySelector("body").style.background)
         document.querySelector("body").style.background === "linear-gradient(to left, rgb(61, 20, 25) 50%, rgb(26, 80, 128) 50%)"?
         document.querySelector("body").style.background = "linear-gradient(to left, #6b2430 50%, #0d2f4d 50%)":
         document.querySelector("body").style.background = "linear-gradient(to left, #3d1419 50%, #1a5080 50%)";
@@ -223,7 +222,6 @@ export class DOM {
         this.game.pickShip(this.#findShipByName());
         let coord = this.#coordinateTranslate();
         this.game.placeShip(coord);
-        console.table(this.game.getBoard());
     }
 
     #coordinateTranslate(){
@@ -250,7 +248,6 @@ export class DOM {
         this.inputShip.addEventListener("input", (event) => {
             if (event.target.value.length === 2){
                 let ship = this.#findShipByName();
-                console.log(ship);
             }
         });
     }
