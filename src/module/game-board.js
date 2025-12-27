@@ -17,6 +17,7 @@ export class Gameboard {
     this.placedShips = [];
     this.generatedCoordinates = [];
   }
+
   generateCoordinates(){
     if (this.generatedCoordinates.length === 0){
       for (let [rowIndex, row] of this.board.entries()){
@@ -26,10 +27,12 @@ export class Gameboard {
       }
     }
   }
+
   resetCoordinates(){
     this.generatedCoordinates = [];
     this.generateCoordinates();
   }
+
   resetBoard() {
     this.board.length = 0;
   }
@@ -45,9 +48,11 @@ export class Gameboard {
       }
     }
   }
+
   getBoard(){
     return this.board;
   }
+
   getShips(){
       return this.ships;
   }
@@ -55,6 +60,7 @@ export class Gameboard {
   getPlacedShips(){
     return this.placedShips;
   }
+
   // used for validation
   makeMockBoard() {
     return this.board.map((row) => [...row]);
@@ -63,6 +69,7 @@ export class Gameboard {
   changePosition(ship){
       ship.changePosition();
   }
+
   placeShip(ship) { // ship here is this.ships[shipID]
     if (!ship) {
         return;
@@ -72,9 +79,11 @@ export class Gameboard {
     }
     this.placedShips.push(ship);
   }
+
   isPlaced(){
     return this.placedShips.length === this.ships.length;
   }
+
   receiveAttack(coords){
     const [x, y] = coords;
     if (this.board[x][y] === -1 /* (default number for misses) */  || this.board[x][y] === 69 /* nice! */ ){
@@ -95,7 +104,7 @@ export class Gameboard {
   }
 
   isSunk(ship){
-    return this.ships[ship].isSunk()
+    return this.ships[ship].isSunk();
   }
   
   reportSunkenShips(){
@@ -136,7 +145,7 @@ export class Gameboard {
   }
 
   canPlace(ship, coords) {
-    const [x, y] = coords
+    const [x, y] = coords;
     if (x < 0 || y < 0 || x > 9 || y > 9) {
       return false;
     }
