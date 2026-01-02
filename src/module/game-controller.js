@@ -1,4 +1,4 @@
-import { Gameboard } from "./game-board.js";
+import { GameBoard } from "./game-board.js";
 import { Player } from "./player.js";
 
 export class GameController {
@@ -9,34 +9,29 @@ export class GameController {
         };
         this.activePlayer = null;
     }
-
-    getID(){
+    getPlayers(){
+        return this.players;
+    }
+    getActivePlayerID(){
         return this.activePlayer.getID();
     }
 
-    getShips(){
+    getActivePlayerShips(){
         return this.getActivePlayer().getShips();
     }
 
-    getPlacedShips(){
-        return {
-            blue: this.players.blue.getPlacedShips(),
-            red:  this.players.red.getPlacedShips()
-        };
-    }
-
-    getBoard(){
+    getActivePlayerBoard(){
         return this.activePlayer.getBoard();
     }
 
-    makeBluePlayer(name, identity){
-        this.players.blue = new Player(name, 1, identity);
+    makeBluePlayer(name, id){
+        this.players.blue = new Player(name, id);
         this.players.blue.makeBoard();
         this.activePlayer = this.players.blue;
     }
 
-    makeRedPlayer(name, identity){
-        this.players.red = new Player(name, 2, identity);
+    makeRedPlayer(name, id){
+        this.players.red = new Player(name, id);
         this.players.red.makeBoard();
     }
 
@@ -101,7 +96,7 @@ export class GameController {
 
     resetTheGame(){
         for (let player of Object.values(this.players)){
-            player.board = new Gameboard();
+            player.board = new GameBoard();
             player.makeBoard();
         }
     }

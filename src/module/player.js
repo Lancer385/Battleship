@@ -1,11 +1,10 @@
-import { Gameboard } from "./game-board.js";
+import { GameBoard } from "./game-board.js";
 
 export class Player {
-    constructor(name, id, identity){
+    constructor(name, id){
         this.name = name;
         this.id = id;
-        this.identity = identity;
-        this.board = new Gameboard();
+        this.board = new GameBoard();
         this.pickedShip = null;
     }
 
@@ -46,10 +45,6 @@ export class Player {
         return this.pickedShip;
     }
 
-    getHitState(ship){
-        return this.board.getHitState(ship);
-    }
-
     isSunk(ship){
         return this.board.isSunk(ship);
     }
@@ -84,10 +79,10 @@ export class Player {
 
     randomizePlacement(){
     this.board.generateCoordinates();
-        if (this.board.placedShips.length !== 0) {
+        if (this.getPlacedShips().length !== 0) {
             this.resetBoardState();
         };
-        for (let ship of this.board.ships) {
+        for (let ship of this.getShips()) {
             if (Math.random() < 0.5) {
                 this.changePosition(ship);
             }
@@ -109,14 +104,14 @@ export class Player {
     }
 
     #isPlaced(ship){
-        return this.board.placedShips.some(id => id.id === ship.id);
+        return this.getPlacedShips().some(id => id.id === ship.id);
     }
  
     resetBoardState(){
-        for (let ship of this.board.placedShips){
+        for (let ship of this.getPlacedShips()){
             ship.coordinates.length = 0;
         }
-        this.board.placedShips.length = 0;
+        this.getPlacedShips().length = 0;
         this.board.resetBoard();
         this.board.makeBoard();
     }

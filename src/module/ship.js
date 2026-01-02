@@ -23,14 +23,18 @@ export class Ship {
     return this.length <= this.hit;
   }
 
-  gotHit() {
+  receiveHit() {
     this.hit += 1;
   }
-  
-  getHitState(){
-    return this.hit;
+  getID(){
+    return this.id;
   }
-
+  getLength(){
+    return this.length;
+  }
+  getCoordinates(){
+    return this.coordinates;
+  }
   setPosition(x , y){
     this.coordinates = [];
     for (let i = 0; i < this.length; i++){

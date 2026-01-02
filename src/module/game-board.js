@@ -1,6 +1,10 @@
 import { Ship } from "./ship.js";
 
-export class Gameboard {
+// magic numbers
+const hit = 69
+const miss = -1
+const empty = 99
+export class GameBoard {
   constructor() {
     this.board = [];
     this.size = 10;
@@ -44,7 +48,7 @@ export class Gameboard {
     for (let i = 0; i < this.size; i++) {
       this.board.push([]);
       for (let j = 0; j < this.size; j++) {
-        this.board[i].push(99);
+        this.board[i].push(empty);
       }
     }
   }
@@ -74,8 +78,8 @@ export class Gameboard {
     if (!ship) {
         return;
     }
-    for (let i = 0; i < ship.length; i++) {
-      this.board[ship.coordinates[i][0]][ship.coordinates[i][1]] = ship.id;
+    for (let i = 0; i < ship.getLength(); i++) {
+      this.board[ship.getCoordinates()[i][0]][ship.getCoordinates()[i][1]] = ship.getID();
     }
     this.placedShips.push(ship);
   }
@@ -86,22 +90,19 @@ export class Gameboard {
 
   receiveAttack(coords){
     const [x, y] = coords;
-    if (this.board[x][y] === -1 /* (default number for misses) */  || this.board[x][y] === 69 /* nice! */ ){
-      return false; // can't hit this, try again
+    if (this.board[x][y] === miss|| this.board[x][y] === hit){
+      return false;
     }
-    if (this.board[x][y] === 99){ 
-      this.board[x][y] = -1; 
+    if (this.board[x][y] === empty){ 
+      this.board[x][y] = miss; 
     }
     else {
-     this.ships[this.board[x][y]].gotHit();
-     this.board[x][y] = 69;
+     this.ships[this.board[x][y]].receiveHit();
+     this.board[x][y] = hit;
     }
-    return true; // Goodjob hitting or... missing. it's your opponent's turn
+    return true;
   }
 
-  getHitState(ship){
-    return this.ships[ship].getHitState();
-  }
 
   isSunk(ship){
     return this.ships[ship].isSunk();
@@ -112,20 +113,19 @@ export class Gameboard {
   }
 
   #checkNearestNeighbor(board, ship) {
-    // edge cases: is there anything nearby?
+    // edge cases: all the cells around a ship
     const directions = [
-      // Writing comments for this because it's confusing af
-      [-1, -1], // top-left
-      [-1, 0], // top
-      [-1, 1], // top-right
-      [0, -1], // left
-      [0, 1], // right
-      [+1, -1], // bottom-left
-      [+1, 0], // bottom
-      [+1, 1], // bottom-right
+      [-1, -1],
+      [-1, 0], 
+      [-1, 1], 
+      [0, -1], 
+      [0, 1],
+      [+1, -1],
+      [+1, 0],
+      [+1, 1],
     ];
     // saved coordinates for where the ship is going to be placed
-    let coordinates = ship.coordinates;
+    let coordinates = ship.getCoordinates();
 
     // checking all 8 directions for each cell, are they empty? then place it
     // (also excluding the same cell id to work well)
@@ -136,7 +136,7 @@ export class Gameboard {
         if (checkX < 0 || checkX > 9 || checkY < 0 || checkY > 9) {
           continue;
         }
-        if (board[checkX][checkY] !== 99 && board[checkX][checkY] !== ship.id) {
+        if (board[checkX][checkY] !== empty && board[checkX][checkY] !== ship.getID()) {
           return false;
         }
       }
@@ -151,7 +151,7 @@ export class Gameboard {
     }
     ship.setPosition(x, y);
     const mockBoard = this.makeMockBoard();
-    let placement = ship.coordinates;
+    let placement = ship.getCoordinates();
     // checks out of bounds
     for (let coord of placement) {
         if (coord[0] < 0 || coord[0] >= this.size || 
@@ -159,14 +159,13 @@ export class Gameboard {
             return false;
         }
     }
-    // 99 means empty cell
     for (let i = 0; i < placement.length; i++) {
-      if (mockBoard[placement[i][0]][placement[i][1]] !== 99) {
+      if (mockBoard[placement[i][0]][placement[i][1]] !== empty) {
         return false;
       }
-      mockBoard[placement[i][0]][placement[i][1]] = ship.id;
+      mockBoard[placement[i][0]][placement[i][1]] = ship.getID();
     }
-    // check nearest neighbor
+
     if (!this.#checkNearestNeighbor(mockBoard, ship)) {
       return false;
     }

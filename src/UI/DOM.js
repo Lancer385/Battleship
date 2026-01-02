@@ -1,7 +1,10 @@
 import "./style.css";
 
+// magic numbers
 const human = 0;
 const cpu = 1;
+const miss = -1
+const hit = 69
 
 export class DOM {
     constructor(game){
@@ -36,11 +39,12 @@ export class DOM {
             const red = this.menu.elements.red.value;
             this.game.makeBluePlayer(blue, human);
             this.game.makeRedPlayer(red, cpu);
+            const players = this.game.getPlayers()
             this.menu.classList.add("hidden");
             this.gameUI.classList.remove("hidden");
             this.#backgroundTransition();
-            this.names.blue.textContent = this.game.players.blue.name;
-            this.names.red.textContent = this.game.players.red.name;
+            this.names.blue.textContent = players.blue.name;
+            this.names.red.textContent = players.red.name;
             this.makeGrid();
             this.#selectShip();
             this.randomizePlacement();
@@ -68,29 +72,21 @@ export class DOM {
     attack(){
         const cells = document.querySelectorAll(".cell");
         for (let cell of cells) {
-            if (this.#getPlayerByID(cell.dataset.id).identity === cpu){
+            if (cell.dataset.id === String(cpu)){
                 cell.classList.remove("unClickable");
             }
             cell.addEventListener("click", (e) => {
                 let row = e.target.dataset.row;
                 let col = e.target.dataset.column;
                 if(this.game.attack([row, col])){
-                   this.#checkGameState();
-                   this.#toggleClick(this.game.getOpponent().id);
-                   this.switchTurn();
-                   this.#updateGrid();
-                   this.game.cpuAttack();
-                   setTimeout(() => {
-                    this.#toggleBackground()
-                   }, 500);
-                   setTimeout(() => {
-                    this.#updateGrid();
-                   }, 1000);                   
-                   setTimeout(() => {
-                     this.#toggleClick(this.game.getOpponent().id);
-                     this.#checkGameState();
-                     this.#toggleBackground()
-                   }, 2000);
+                  this.#checkGameState();
+                  this.#toggleClick(this.game.getOpponent().id);
+                  this.switchTurn();
+                  this.#updateGrid();
+                  this.game.cpuAttack();
+                  if (!this.#checkGameState()){
+                    this.#renderTurnFlow()
+                  }
                 };
             });
         }
@@ -109,17 +105,18 @@ export class DOM {
             this.#backgroundTransition();
         });
     }
+
     // helper methods - main methods
 
     makeGrid(){
-        const board = this.game.getBoard();
+        const board = this.game.getActivePlayerBoard();
         for (let x of Object.values(this.sea)){
             for (let [rowIndex, row] of board.entries()){
                 for (let [colIndex, column] of row.entries()){
                     const cell = document.createElement("button");
                     cell.classList.add("cell", "unClickable");
                     cell.dataset.row = rowIndex;
-                    x.classList.contains("blue") ? cell.dataset.id = 1 : cell.dataset.id = 2;
+                    cell.dataset.id = x.classList.contains("blue") ? human : cpu;
                     cell.dataset.column = colIndex;
                     x.appendChild(cell);
                 }
@@ -130,14 +127,14 @@ export class DOM {
     randomizePlacement(){
             this.resetGrid();
             this.game.randomizePlacement();
-            if (this.game.getActivePlayer().identity === human){
+            if (this.game.getActivePlayer().id === human){
                 this.#updateGrid();
             }
             
     }
      
     resetGrid(){
-        document.querySelectorAll(`button[data-id ="${this.game.getID()}"]`).forEach((node) => {
+        document.querySelectorAll(`button[data-id ="${this.game.getActivePlayerID()}"]`).forEach((node) => {
             node.classList.remove("piece");
             node.classList.remove("hit");
             node.classList.remove("miss");
@@ -148,20 +145,18 @@ export class DOM {
         this.game.switchTurn();
     }
 
-    getShips(){
-        return this.game.getShips();
-    }
 
     #checkGameState(){
         const gameState = this.game.checkGameState();
         if (gameState.isGameOver){
             this.gameOver.classList.remove("hidden");
-            for (let player of Object.values(this.game.players)){
+            for (let player of Object.values(this.game.getPlayers())){
                 if (gameState.whoLost !== player){
                     this.winner.textContent = `${player.name}`;
                 }
             }
         }
+        return gameState.isGameOver;
     }
 
     #backgroundTransition(){
@@ -169,21 +164,36 @@ export class DOM {
     }
 
     #updateGrid(){
-        const board = this.game.getBoard();
+        const board = this.game.getActivePlayerBoard();
         for (let [rowIndex, row] of board.entries()){
             for (let [colIndex, col] of row.entries()){
-                let cell = document.querySelector(`button[data-id ="${this.game.getID()}"][data-row="${rowIndex}"][data-column="${colIndex}"]`);
-                    if (col === -1 ){
+                let cell = document.querySelector(`button[data-id ="${this.game.getActivePlayerID()}"][data-row="${rowIndex}"][data-column="${colIndex}"]`);
+                    if (col === miss ){
                         cell.classList.add("miss");
                     }
-                    if (col === 69){
+                    if (col === hit){
                         cell.classList.add("hit");
                     }
-                    if (col >= 0 && col <= this.getShips().length  && this.game.getActivePlayer().identity === human){
+                    // checks if cell has a ship piece and renders it(only the player board)
+                    // cell values = ship id
+                    if (col >= 0 && col <= this.game.getActivePlayerShips().length && this.game.getActivePlayerID() === human){
                         cell.classList.add("piece");
                     }
             }
         }
+    }
+
+    #renderTurnFlow(){
+        setTimeout(() => {
+        this.#toggleBackground()
+        }, 500);
+        setTimeout(() => {
+        this.#updateGrid();
+        }, 1000);                   
+        setTimeout(() => {
+            this.#toggleClick(this.game.getOpponent().id);
+            this.#toggleBackground()
+        }, 2000);
     }
 
     #toggleBackground(){
@@ -197,19 +207,10 @@ export class DOM {
             cell.classList.contains("unClickable")? cell.classList.remove("unClickable"): cell.classList.add("unClickable");
         }
     }
- 
-    #getPlayerByID(id){
-        return Object.values(this.game.players).find(player => player.id === Number(id) );
-    }
-
-    #findShipByName(){
-        return this.getShips().find(e => e.name === this.shipOptions.value);
-    }
 
 
 
-
-    // unused
+    // scrapped, may be used for future feature
     placeShip(){
         this.buttons.submit.addEventListener("click", () => {
             this.#pickAndPlaceShip();
@@ -234,12 +235,15 @@ export class DOM {
     }
 
     #selectShip(){
-        let ships = this.getShips();
+        let ships = this.game.getActivePlayerShips();
         for (let ship of ships){
             let item = document.createElement("option");
             [item.textContent, item.value] = [ship.name, ship.name];
             this.shipOptions.appendChild(item);
         }
+    }
+    #findShipByName(){
+        return this.game.getActivePlayerShips().find(e => e.name === this.shipOptions.value);
     }
 
     // this one isn't even complete
